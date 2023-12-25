@@ -17,10 +17,9 @@ using NAudio.Wave;
 
 namespace Wavelette_comparison
 {
-
     public partial class Form1 : Form
     {
-
+        private readonly object lockObject = new object();
         Signal S1 = new Signal();
         Signal S2 = new Signal();
 
@@ -68,8 +67,6 @@ namespace Wavelette_comparison
             {
                 // Get the number of channels and select the desired channel
                 int channels = mp3Reader.WaveFormat.Channels;
-                int selectedChannel = 0; // Use the first channel (0-indexed)
-                //MessageBox.Show($"Channels: {mp3Reader.WaveFormat.Channels}" + Environment.NewLine + $"Sample Rate: {mp3Reader.WaveFormat.SampleRate}" + Environment.NewLine + $"Bits per Sample: {mp3Reader.WaveFormat.BitsPerSample}" + Environment.NewLine + $"Total Time: {mp3Reader.TotalTime}");
                 
                 // You can now read and process the audio samples from the selected channel
                 int blockSize = channels * mp3Reader.WaveFormat.BitsPerSample / 8;
@@ -85,8 +82,9 @@ namespace Wavelette_comparison
                         short sampleValue = BitConverter.ToInt16(buffer, i);
                         double normalizedSample = sampleValue / (double)short.MaxValue;
 
-                        // Add the normalized sample to the list
-                        Signal.Add(normalizedSample);
+                       // Add the normalized sample to the list
+                       Signal.Add(normalizedSample);
+
 
                     }
                     // MessageBox.Show(System.Convert.ToString(Signal));
@@ -126,15 +124,13 @@ namespace Wavelette_comparison
         {
             double step = 1 / length;
             Vector<double> values = Vector<double>.Build.Dense(System.Convert.ToInt32(length));
-            double value = 0;
             double T = 0;
             int i = 0;
             for (double t = 0; t < 1; t+=step)
             {
                 if (i >= length) { break; }
                 T = (t - b) / a;
-                value = (1 - Math.Pow(T, 2)) * Math.Exp(-1 * Math.Pow(T, 2) / 2);
-                values[i] = value;
+                values[i] = (1 - Math.Pow(T, 2)) * Math.Exp(-1 * Math.Pow(T, 2) / 2);
                 i++;
             }
             return (values);
@@ -157,8 +153,7 @@ namespace Wavelette_comparison
                     B += j * Bstep;
                     value=S.S.DotProduct(Mhat(A,B,(S.S.Count)));
                     matrix[i, j] = value;
-                    S.progressUpdate(1/(S.reza*S.rezb));
-                  
+
                 }
                 B = 0;
             }
@@ -197,6 +192,15 @@ namespace Wavelette_comparison
         private void button1_Click(object sender, EventArgs e)
         {
             PlotVector(S1, S2);
+            updS(S1);
+            updS(S2);
+        } 
+        private void textBox9_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void updS(Signal S)
+        {
             S1.reza = System.Convert.ToInt32(textBox3.Text);
             S2.reza = System.Convert.ToInt32(textBox3.Text);
             S1.rezb = System.Convert.ToInt32(textBox4.Text);
@@ -205,11 +209,9 @@ namespace Wavelette_comparison
             S1.ae = System.Convert.ToDouble(textBox9.Text);
             S2.a = System.Convert.ToDouble(textBox10.Text);
             S2.ae = System.Convert.ToDouble(textBox9.Text);
-        } 
-        private void textBox9_TextChanged(object sender, EventArgs e)
-        {
-
         }
+
+        
         #endregion
         #region Excel export
         static void Print(Matrix<double> data)
@@ -245,39 +247,20 @@ namespace Wavelette_comparison
             }
         }
         #endregion
-        void progress1(Signal s)
-        {
-            while (progressBar1.Value < 100)
-            {
-                progressBar1.Value = System.Convert.ToInt32(s.progress);
-            }
-        }
-        void progress2(Signal s)
-        {
-            while (progressBar2.Value < 100)
-            {
-            progressBar2.Value = System.Convert.ToInt32(s.progress);
-            }
-        }
+       
         private void button2_Click(object sender, EventArgs e)
         {
-            double l = S1.S.Count();
-            /*Thread thread1 = new Thread(()=>Transform(S1,S1.a,S1.b,S1.S.Count()));
+            updS(S1);
+            updS(S2);
+            Thread thread1 = new Thread(()=>Transform(S1,S1.a,S1.b,S1.S.Count()));
             Thread thread2 = new Thread(() => Transform(S2, S2.a, S2.b, S2.S.Count()));
-            Thread thread3 = new Thread(()=> progress1(S1));
-            Thread thread4 = new Thread(() => progress2(S2));
             thread1.Start();
             thread2.Start();
-            thread3.Start();
-            thread4.Start();*/
-            Transform(S1, S1.a, S1.b, S1.S.Count());
-
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             
-            Print(S1.readM());
         }
     }
 }

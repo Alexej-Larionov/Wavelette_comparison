@@ -35,13 +35,6 @@ namespace Wavelette_comparison
         {
             return (this.m);
         }
-        public void progressUpdate(double a)
-        {
-            this.progress += a;
-        }
-        public void progressnull()
-        {
-            this.progress=0;
-        }
+
     }
 }
