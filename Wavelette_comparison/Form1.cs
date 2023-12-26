@@ -175,7 +175,7 @@ namespace Wavelette_comparison
                 }
             }
             S.write(matrix);
-            Print(S.readM());
+           // Print(S.readM());
 
         }
         #endregion
