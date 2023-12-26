@@ -22,7 +22,7 @@ namespace Wavelette_comparison
         private readonly object lockObject = new object();
         Signal S1 = new Signal();
         Signal S2 = new Signal();
-
+        
         public Form1()
         {
             InitializeComponent();
@@ -55,7 +55,7 @@ namespace Wavelette_comparison
             e.Effect = DragDropEffects.All;
 
         }
-       
+
 
         #endregion
         #region Process MP3
@@ -67,7 +67,7 @@ namespace Wavelette_comparison
             {
                 // Get the number of channels and select the desired channel
                 int channels = mp3Reader.WaveFormat.Channels;
-                
+
                 // You can now read and process the audio samples from the selected channel
                 int blockSize = channels * mp3Reader.WaveFormat.BitsPerSample / 8;
                 byte[] buffer = new byte[blockSize * mp3Reader.WaveFormat.SampleRate];
@@ -82,8 +82,8 @@ namespace Wavelette_comparison
                         short sampleValue = BitConverter.ToInt16(buffer, i);
                         double normalizedSample = sampleValue / (double)short.MaxValue;
 
-                       // Add the normalized sample to the list
-                       Signal.Add(normalizedSample);
+                        // Add the normalized sample to the list
+                        Signal.Add(normalizedSample);
 
 
                     }
@@ -94,11 +94,11 @@ namespace Wavelette_comparison
         }
         #endregion
         #region Wavelette functions
-        Vector<double> HaarFun(double a, double b, double length, double step )
+        Vector<double> HaarFun(double a, double b, double length, double step)
         {
 
-            Vector<double> values1=null;
-            for (double t = 0; t <length; t += step)
+            Vector<double> values1 = null;
+            for (double t = 0; t < length; t += step)
             {
                 double T = (t - b) / a;
                 if (T > 0 && T < 0.5)
@@ -137,23 +137,26 @@ namespace Wavelette_comparison
         }
         void Transform(Signal S, double a, double b, double length)
         {
-            double Bstep, Astep,A,B;
+            
+            double Bstep, Astep, A, B;
             Bstep = (S.be - S.b) / System.Convert.ToDouble(S.rezb);
             Astep = (S.ae - S.a) / System.Convert.ToDouble(S.reza);
             A = S.a;
             B = S.b;
             double value = 1;
             Matrix<double> matrix = Matrix<double>.Build.Dense(S.reza, S.rezb);
-            for (int i=0; i<S.reza; i++)
+            for (int i = 0; i < S.reza; i++)
             {
+               
                 A = i * Astep;
                 for (int j = 0; j < S.rezb; j++)
                 {
                     B = j * Bstep;
-                    value=S.S.DotProduct(Mhat(A,B,(S.S.Count)));
+                    value = S.S.DotProduct(Mhat(A, B, (S.S.Count)));
                     matrix[i, j] = value;
 
                 }
+               
             }
             S.write(matrix);
             Print(S.readM());
@@ -179,7 +182,7 @@ namespace Wavelette_comparison
             // Add data points to the series
             for (int i = 0; i < S2.S.Count; i++)
             {
-                chart2.Series[0].Points.AddY( S2.S[i]);
+                chart2.Series[0].Points.AddY(S2.S[i]);
             }
 
 
@@ -192,7 +195,7 @@ namespace Wavelette_comparison
             PlotVector(S1, S2);
             updS(S1);
             updS(S2);
-        } 
+        }
         private void textBox9_TextChanged(object sender, EventArgs e)
         {
 
@@ -209,26 +212,33 @@ namespace Wavelette_comparison
             S2.ae = System.Convert.ToDouble(textBox9.Text);
         }
 
-         private void button2_Click(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e)
         {
+            // Check if the background worker is not already running
+            
             updS(S1);
             updS(S2);
-            Thread thread1 = new Thread(()=>Transform(S1,S1.a,S1.b,S1.S.Count()));
+            Thread thread1 = new Thread(() => Transform(S1, S1.a, S1.b, S1.S.Count()));
             Thread thread2 = new Thread(() => Transform(S2, S2.a, S2.b, S2.S.Count()));
+
             thread1.Start();
             thread2.Start();
             
 
-        }
 
+        }
+        private void button4_Click(object sender, EventArgs e)
+        {
+            //S1.write(NormalizeMatrix(S1.readM()));
+            //S2.write(NormalizeMatrix(S2.readM()));
+
+            GenerateAndSaveImage(S1.readM(), "output_imageA.png");
+            GenerateAndSaveImage(S2.readM(), "output_imageB.png");
+
+        }
         private void button3_Click(object sender, EventArgs e)
         {
-            Thread thread1 = new Thread(() => ShowMatrixInSeparateWindow(S1.readM()));
-            Thread thread2 = new Thread(() => ShowMatrixInSeparateWindow(S2.readM()));
-            thread1.SetApartmentState(ApartmentState.STA); // Set thread apartment state for UI components
-            thread2.SetApartmentState(ApartmentState.STA); // Set thread apartment state for UI components
-            thread1.Start();
-            thread2.Start();
+
         }
         #endregion
         #region Excel export
@@ -257,7 +267,7 @@ namespace Wavelette_comparison
                 {
                     for (int j = 0; j < cols; j++)
                     {
-                        worksheet.Cells[i + 1, j + 1].Value = 100000*data[i, j];
+                        worksheet.Cells[i + 1, j + 1].Value = 100000 * data[i, j];
                     }
                 }
 
@@ -266,18 +276,19 @@ namespace Wavelette_comparison
         }
         #endregion
         #region ColorMapping
-        static void ShowMatrixInSeparateWindow(Matrix<double> matrix)
+        static Matrix<double> NormalizeMatrix(Matrix<double> matrix)
         {
-            // Create a new form and PictureBox for displaying the matrix
-            Form matrixForm = new Form();
-            PictureBox pictureBox = new PictureBox();
+            double min = matrix.Enumerate().Min();
+            double max = matrix.Enumerate().Max();
 
-            // Set PictureBox dimensions based on matrix size
-            pictureBox.Width = matrix.ColumnCount;
-            pictureBox.Height = matrix.RowCount;
-
-            // Create a Bitmap to draw the matrix
-            Bitmap bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
+            matrix.MapInplace(x => (x - min) / (max - min));
+            return (matrix);
+        }
+        static void GenerateAndSaveImage(Matrix<double> matrix, string filePath)
+        {
+            double zoomFactor = 1;
+            // Create a new Bitmap to draw the matrix
+            Bitmap bitmap = new Bitmap((int)(matrix.ColumnCount * 20 * zoomFactor), (int)(matrix.RowCount * 20 * zoomFactor));
 
             // Map matrix values to colors and set pixels in the Bitmap
             for (int i = 0; i < matrix.RowCount; i++)
@@ -287,32 +298,41 @@ namespace Wavelette_comparison
                     double value = matrix[i, j];
                     Color color = MapValueToColor(value);
 
-                    bitmap.SetPixel(j, i, color);
+                    for (int x = 0; x < 20 * zoomFactor; x++) // Adjust pixel size for better visibility
+                    {
+                        for (int y = 0; y < 20 * zoomFactor; y++) // Adjust pixel size for better visibility
+                        {
+                            int pixelX = (int)(j * 20 * zoomFactor + x); // Adjust pixel size for better visibility
+                            int pixelY = (int)(i * 20 * zoomFactor + y); // Adjust pixel size for better visibility
+
+                            bitmap.SetPixel(pixelX, pixelY, color);
+                        }
+                    }
                 }
             }
 
-            // Set the Bitmap as the PictureBox image
-            pictureBox.Image = bitmap;
+            // Save the Bitmap as an image file
+            bitmap.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
 
-            // Add PictureBox to the form
-            matrixForm.Controls.Add(pictureBox);
-
-            // Show the form
-            Application.Run(matrixForm);
+            Console.WriteLine($"Image saved to: {filePath}");
         }
 
         static Color MapValueToColor(double value)
         {
             // Example mapping from blue (low values) to red (high values)
-            int blueComponent = (int)(255 * (1 - value / 9.0));
-            int redComponent = (int)(255 * (value / 9.0));
+            int blueComponent = (int)(255 * (1 - value));
+            int redComponent = (int)(255 * value);
 
             // Ensure color components are within valid range
             blueComponent = Math.Max(0, Math.Min(255, blueComponent));
             redComponent = Math.Max(0, Math.Min(255, redComponent));
 
-            return Color.FromArgb(0, blueComponent, 0, redComponent);
+            return Color.FromArgb(blueComponent, 0, redComponent);
         }
+        #endregion
+        #region Progress
+      
+        
         #endregion
     }
 }
