@@ -21,7 +21,7 @@ namespace Wavelette_comparison
         public void write(List<double> A)
         {
             this.S = Vector<double>.Build.DenseOfEnumerable(A);
-            this.be = 1;
+            this.be = this.S.Count();
         }
         public void write(Matrix<double> A)
         {

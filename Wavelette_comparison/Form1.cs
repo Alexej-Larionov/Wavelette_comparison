@@ -122,13 +122,13 @@ namespace Wavelette_comparison
         }
         Vector<double> Mhat(double a, double b, double length)
         {
-            double step = 1 / length;
+            //double step = 1 / length;
             Vector<double> values = Vector<double>.Build.Dense(System.Convert.ToInt32(length));
             double T = 0;
             double t = 0;
             Parallel.For(0, System.Convert.ToInt32(length), i =>
             {
-                t = System.Convert.ToDouble(i) * step;
+                t = System.Convert.ToDouble(i);// * step;
                 T = (t - b) / a;
                 values[System.Convert.ToInt32(i)] = (1 - Math.Pow(T, 2)) * Math.Exp(-1 * Math.Pow(T, 2) / 2);
             });
@@ -146,15 +146,14 @@ namespace Wavelette_comparison
             Matrix<double> matrix = Matrix<double>.Build.Dense(S.reza, S.rezb);
             for (int i=0; i<S.reza; i++)
             {
-                A += i * Astep;
+                A = i * Astep;
                 for (int j = 0; j < S.rezb; j++)
                 {
-                    B += j * Bstep;
+                    B = j * Bstep;
                     value=S.S.DotProduct(Mhat(A,B,(S.S.Count)));
                     matrix[i, j] = value;
 
                 }
-                B = 0;
             }
             S.write(matrix);
             Print(S.readM());
@@ -210,7 +209,27 @@ namespace Wavelette_comparison
             S2.ae = System.Convert.ToDouble(textBox9.Text);
         }
 
-        
+         private void button2_Click(object sender, EventArgs e)
+        {
+            updS(S1);
+            updS(S2);
+            Thread thread1 = new Thread(()=>Transform(S1,S1.a,S1.b,S1.S.Count()));
+            Thread thread2 = new Thread(() => Transform(S2, S2.a, S2.b, S2.S.Count()));
+            thread1.Start();
+            thread2.Start();
+            
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Thread thread1 = new Thread(() => ShowMatrixInSeparateWindow(S1.readM()));
+            Thread thread2 = new Thread(() => ShowMatrixInSeparateWindow(S2.readM()));
+            thread1.SetApartmentState(ApartmentState.STA); // Set thread apartment state for UI components
+            thread2.SetApartmentState(ApartmentState.STA); // Set thread apartment state for UI components
+            thread1.Start();
+            thread2.Start();
+        }
         #endregion
         #region Excel export
         static void Print(Matrix<double> data)
@@ -238,7 +257,7 @@ namespace Wavelette_comparison
                 {
                     for (int j = 0; j < cols; j++)
                     {
-                        worksheet.Cells[i + 1, j + 1].Value = data[i, j];
+                        worksheet.Cells[i + 1, j + 1].Value = 100000*data[i, j];
                     }
                 }
 
@@ -246,20 +265,54 @@ namespace Wavelette_comparison
             }
         }
         #endregion
-       
-        private void button2_Click(object sender, EventArgs e)
+        #region ColorMapping
+        static void ShowMatrixInSeparateWindow(Matrix<double> matrix)
         {
-            updS(S1);
-            updS(S2);
-            Thread thread1 = new Thread(()=>Transform(S1,S1.a,S1.b,S1.S.Count()));
-            thread1.Start();
-            Thread thread2 = new Thread(() => Transform(S2, S2.a, S2.b, S2.S.Count()));
-            thread2.Start();
+            // Create a new form and PictureBox for displaying the matrix
+            Form matrixForm = new Form();
+            PictureBox pictureBox = new PictureBox();
+
+            // Set PictureBox dimensions based on matrix size
+            pictureBox.Width = matrix.ColumnCount;
+            pictureBox.Height = matrix.RowCount;
+
+            // Create a Bitmap to draw the matrix
+            Bitmap bitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
+
+            // Map matrix values to colors and set pixels in the Bitmap
+            for (int i = 0; i < matrix.RowCount; i++)
+            {
+                for (int j = 0; j < matrix.ColumnCount; j++)
+                {
+                    double value = matrix[i, j];
+                    Color color = MapValueToColor(value);
+
+                    bitmap.SetPixel(j, i, color);
+                }
+            }
+
+            // Set the Bitmap as the PictureBox image
+            pictureBox.Image = bitmap;
+
+            // Add PictureBox to the form
+            matrixForm.Controls.Add(pictureBox);
+
+            // Show the form
+            Application.Run(matrixForm);
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        static Color MapValueToColor(double value)
         {
-            
+            // Example mapping from blue (low values) to red (high values)
+            int blueComponent = (int)(255 * (1 - value / 9.0));
+            int redComponent = (int)(255 * (value / 9.0));
+
+            // Ensure color components are within valid range
+            blueComponent = Math.Max(0, Math.Min(255, blueComponent));
+            redComponent = Math.Max(0, Math.Min(255, redComponent));
+
+            return Color.FromArgb(0, blueComponent, 0, redComponent);
         }
+        #endregion
     }
 }
