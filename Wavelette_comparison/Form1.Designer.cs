@@ -80,7 +80,7 @@ namespace Wavelette_comparison
             this.textBox2.AllowDrop = true;
             this.textBox2.BackColor = System.Drawing.Color.WhiteSmoke;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox2.Location = new System.Drawing.Point(12, 128);
+            this.textBox2.Location = new System.Drawing.Point(12, 38);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(206, 20);
             this.textBox2.TabIndex = 1;
@@ -90,11 +90,13 @@ namespace Wavelette_comparison
             // 
             // chart1
             // 
+            this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             chartArea1.Name = "ChartArea1";
             this.chart1.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(246, 12);
+            this.chart1.Location = new System.Drawing.Point(224, 12);
             this.chart1.Name = "chart1";
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine;
@@ -103,30 +105,32 @@ namespace Wavelette_comparison
             series1.Legend = "Legend1";
             series1.Name = "First file";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(542, 110);
+            this.chart1.Size = new System.Drawing.Size(869, 267);
             this.chart1.TabIndex = 2;
             this.chart1.Text = "chart1";
             // 
             // chart2
             // 
+            this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             chartArea2.Name = "ChartArea1";
             this.chart2.ChartAreas.Add(chartArea2);
             legend2.Name = "Legend1";
             this.chart2.Legends.Add(legend2);
-            this.chart2.Location = new System.Drawing.Point(246, 128);
+            this.chart2.Location = new System.Drawing.Point(224, 285);
             this.chart2.Name = "chart2";
             series2.ChartArea = "ChartArea1";
             series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine;
             series2.Legend = "Legend1";
             series2.Name = "Second file";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(542, 110);
+            this.chart2.Size = new System.Drawing.Size(869, 267);
             this.chart2.TabIndex = 3;
             this.chart2.Text = "chart2";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 215);
+            this.button1.Location = new System.Drawing.Point(12, 64);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(206, 23);
             this.button1.TabIndex = 4;
@@ -147,7 +151,7 @@ namespace Wavelette_comparison
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(96, 244);
+            this.textBox3.Location = new System.Drawing.Point(96, 100);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(51, 20);
             this.textBox3.TabIndex = 5;
@@ -155,7 +159,7 @@ namespace Wavelette_comparison
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(153, 244);
+            this.textBox4.Location = new System.Drawing.Point(153, 100);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(51, 20);
             this.textBox4.TabIndex = 6;
@@ -165,7 +169,7 @@ namespace Wavelette_comparison
             // 
             this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox5.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.textBox5.Location = new System.Drawing.Point(13, 247);
+            this.textBox5.Location = new System.Drawing.Point(13, 103);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(77, 13);
             this.textBox5.TabIndex = 7;
@@ -173,7 +177,7 @@ namespace Wavelette_comparison
             // 
             // textBox9
             // 
-            this.textBox9.Location = new System.Drawing.Point(152, 273);
+            this.textBox9.Location = new System.Drawing.Point(152, 129);
             this.textBox9.Name = "textBox9";
             this.textBox9.Size = new System.Drawing.Size(51, 20);
             this.textBox9.TabIndex = 13;
@@ -182,7 +186,7 @@ namespace Wavelette_comparison
             // 
             // textBox10
             // 
-            this.textBox10.Location = new System.Drawing.Point(95, 273);
+            this.textBox10.Location = new System.Drawing.Point(95, 129);
             this.textBox10.Name = "textBox10";
             this.textBox10.Size = new System.Drawing.Size(51, 20);
             this.textBox10.TabIndex = 12;
@@ -192,7 +196,7 @@ namespace Wavelette_comparison
             // 
             this.textBox11.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox11.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.textBox11.Location = new System.Drawing.Point(12, 276);
+            this.textBox11.Location = new System.Drawing.Point(12, 132);
             this.textBox11.Name = "textBox11";
             this.textBox11.Size = new System.Drawing.Size(77, 13);
             this.textBox11.TabIndex = 11;
@@ -201,7 +205,7 @@ namespace Wavelette_comparison
             // button2
             // 
             this.button2.BackColor = System.Drawing.Color.White;
-            this.button2.Location = new System.Drawing.Point(12, 295);
+            this.button2.Location = new System.Drawing.Point(12, 151);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(206, 31);
             this.button2.TabIndex = 14;
@@ -215,7 +219,7 @@ namespace Wavelette_comparison
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(12, 332);
+            this.button4.Location = new System.Drawing.Point(12, 188);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(206, 31);
             this.button4.TabIndex = 15;
@@ -226,7 +230,7 @@ namespace Wavelette_comparison
             // progressBar1
             // 
             this.progressBar1.ForeColor = System.Drawing.Color.OrangeRed;
-            this.progressBar1.Location = new System.Drawing.Point(13, 370);
+            this.progressBar1.Location = new System.Drawing.Point(13, 226);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(205, 23);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
@@ -239,7 +243,7 @@ namespace Wavelette_comparison
             // 
             // progressBar2
             // 
-            this.progressBar2.Location = new System.Drawing.Point(12, 400);
+            this.progressBar2.Location = new System.Drawing.Point(12, 256);
             this.progressBar2.Name = "progressBar2";
             this.progressBar2.Size = new System.Drawing.Size(206, 23);
             this.progressBar2.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
@@ -247,17 +251,23 @@ namespace Wavelette_comparison
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(246, 247);
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox1.Location = new System.Drawing.Point(12, 575);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(542, 281);
+            this.pictureBox1.Size = new System.Drawing.Size(1081, 654);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 18;
             this.pictureBox1.TabStop = false;
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(246, 534);
+            this.pictureBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox2.Location = new System.Drawing.Point(12, 1261);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(542, 281);
+            this.pictureBox2.Size = new System.Drawing.Size(1081, 654);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 19;
             this.pictureBox2.TabStop = false;
             // 
@@ -269,7 +279,7 @@ namespace Wavelette_comparison
             this.AutoScrollMargin = new System.Drawing.Size(0, 5);
             this.AutoScrollMinSize = new System.Drawing.Size(0, 5);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1122, 754);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.progressBar2);

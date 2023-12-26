@@ -82,11 +82,11 @@ namespace Wavelette_comparison
                     {
                         // Assuming 16-bit audio, you may need to adjust based on your format
                         short sampleValue = BitConverter.ToInt16(buffer, i);
-                        double normalizedSample = sampleValue / (double)short.MaxValue;
+                       // double normalizedSample = sampleValue / (double)short.MaxValue;
 
                         // Add the normalized sample to the list
-                        Signal.Add(normalizedSample);
-
+                       // Signal.Add(normalizedSample);
+                        Signal.Add(sampleValue);
 
                     }
                     // MessageBox.Show(System.Convert.ToString(Signal));
@@ -231,21 +231,23 @@ namespace Wavelette_comparison
 
         private async void button2_Click(object sender, EventArgs e)
         {
-            ColoredProgressBar bar1 = new ColoredProgressBar();
-            bar1.Maximum = 100;
-            ColoredProgressBar bar2 = new ColoredProgressBar();
-            bar2.Maximum = 100;
-
-
+            
             updS(S1);
             updS(S2);
+            progressBar1.Maximum = S1.reza;
+            progressBar2.Maximum = S2.reza;
             Thread thread1 = new Thread(() => Transform(S1, S1.a, S1.b, S1.S.Count()));
             Thread thread2 = new Thread(() => Transform(S2, S2.a, S2.b, S2.S.Count()));
             thread1.Name ="name1";
             thread2.Name ="name2";
             thread1.Start();
             thread2.Start();
-            
+            if ((progressBar1.Value == progressBar1.Maximum) || (progressBar2.Value == progressBar2.Maximum)) 
+            {
+                MessageBox.Show("Task complete");
+                progressBar1.Value = 0;
+                progressBar2.Value = 0;
+            }
 
 
         }
