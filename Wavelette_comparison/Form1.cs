@@ -14,15 +14,16 @@ using System.Windows.Forms;
 using OfficeOpenXml;
 using NAudio.Wave;
 
-
 namespace Wavelette_comparison
 {
     public partial class Form1 : Form
     {
-        private readonly object lockObject = new object();
         Signal S1 = new Signal();
         Signal S2 = new Signal();
-        
+        private Point mouseDownPoint;
+        private bool isDragging = false;
+        private float zoomFactor = 1.0f;
+        private Image originalImage;
         public Form1()
         {
             InitializeComponent();
@@ -32,6 +33,7 @@ namespace Wavelette_comparison
         {
 
         }
+
         #region Drag&Drop
         private void textBox1_DragDrop(object sender, DragEventArgs e)
         {
@@ -154,12 +156,27 @@ namespace Wavelette_comparison
                     B = j * Bstep;
                     value = S.S.DotProduct(Mhat(A, B, (S.S.Count)));
                     matrix[i, j] = value;
+                
+                }
+                if (Thread.CurrentThread.Name == "name1")
+                {
+                    this.Invoke((Action)(() =>
+                    {
+                        progressBar1.Value = i;
+                    }));
+                }
+                else 
+                {
+                    this.Invoke((Action)(() =>
+                    {
+                        progressBar2.Value = i;
+                    }));
 
                 }
-               
             }
             S.write(matrix);
             Print(S.readM());
+
         }
         #endregion
         #region PLOT
@@ -212,15 +229,20 @@ namespace Wavelette_comparison
             S2.ae = System.Convert.ToDouble(textBox9.Text);
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private async void button2_Click(object sender, EventArgs e)
         {
-            // Check if the background worker is not already running
-            
+            ColoredProgressBar bar1 = new ColoredProgressBar();
+            bar1.Maximum = 100;
+            ColoredProgressBar bar2 = new ColoredProgressBar();
+            bar2.Maximum = 100;
+
+
             updS(S1);
             updS(S2);
             Thread thread1 = new Thread(() => Transform(S1, S1.a, S1.b, S1.S.Count()));
             Thread thread2 = new Thread(() => Transform(S2, S2.a, S2.b, S2.S.Count()));
-
+            thread1.Name ="name1";
+            thread2.Name ="name2";
             thread1.Start();
             thread2.Start();
             
@@ -229,11 +251,11 @@ namespace Wavelette_comparison
         }
         private void button4_Click(object sender, EventArgs e)
         {
-            //S1.write(NormalizeMatrix(S1.readM()));
-            //S2.write(NormalizeMatrix(S2.readM()));
-
             GenerateAndSaveImage(S1.readM(), "output_imageA.png");
             GenerateAndSaveImage(S2.readM(), "output_imageB.png");
+            pictureBox1.Image = Image.FromFile("output_imageA.png"); pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox2.Image = Image.FromFile("output_imageB.png"); pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+
 
         }
         private void button3_Click(object sender, EventArgs e)
@@ -330,9 +352,114 @@ namespace Wavelette_comparison
             return Color.FromArgb(blueComponent, 0, redComponent);
         }
         #endregion
-        #region Progress
-      
-        
+        #region pictureboxex
+        private void pictureBox1_MouseWheel(object sender, MouseEventArgs e)
+        {
+            // Zoom in and out using the mouse wheel
+            const float zoomSpeed = 0.2f;
+
+            if (e.Delta > 0)
+                zoomFactor += zoomSpeed;
+            else
+                zoomFactor -= zoomSpeed;
+
+            ApplyZoomAndPosition();
+        }
+        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Start dragging when the left mouse button is pressed
+            if (e.Button == MouseButtons.Left)
+            {
+                isDragging = true;
+                mouseDownPoint = e.Location;
+            }
+        }
+
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Translate the image when dragging
+            if (isDragging)
+            {
+                int deltaX = e.X - mouseDownPoint.X;
+                int deltaY = e.Y - mouseDownPoint.Y;
+
+                pictureBox1.Location = new Point(pictureBox1.Location.X + deltaX, pictureBox1.Location.Y + deltaY);
+            }
+        }
+
+        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            // Stop dragging when the left mouse button is released
+            if (e.Button == MouseButtons.Left)
+            {
+                isDragging = false;
+            }
+        }
+        private void pictureBox2_MouseWheel(object sender, MouseEventArgs e)
+        {
+            // Zoom in and out using the mouse wheel
+            const float zoomSpeed = 0.2f;
+
+            if (e.Delta > 0)
+                zoomFactor += zoomSpeed;
+            else
+                zoomFactor -= zoomSpeed;
+
+            ApplyZoomAndPosition();
+        }
+        private void pictureBox2_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Start dragging when the left mouse button is pressed
+            if (e.Button == MouseButtons.Left)
+            {
+                isDragging = true;
+                mouseDownPoint = e.Location;
+            }
+        }
+
+        private void pictureBox2_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Translate the image when dragging
+            if (isDragging)
+            {
+                int deltaX = e.X - mouseDownPoint.X;
+                int deltaY = e.Y - mouseDownPoint.Y;
+
+                pictureBox1.Location = new Point(pictureBox1.Location.X + deltaX, pictureBox1.Location.Y + deltaY);
+            }
+        }
+
+        private void pictureBox2_MouseUp(object sender, MouseEventArgs e)
+        {
+            // Stop dragging when the left mouse button is released
+            if (e.Button == MouseButtons.Left)
+            {
+                isDragging = false;
+            }
+        }
+        private void ApplyZoomAndPosition()
+        {
+            // Apply zoom and position adjustments
+            int newWidth = (int)(originalImage.Width * zoomFactor);
+            int newHeight = (int)(originalImage.Height * zoomFactor);
+
+            pictureBox1.Size = new Size(newWidth, newHeight);
+
+            int newX = (int)(mouseDownPoint.X - zoomFactor * mouseDownPoint.X);
+            int newY = (int)(mouseDownPoint.Y - zoomFactor * mouseDownPoint.Y);
+
+            pictureBox1.Location = new Point(newX, newY);
+        }
+
+        private void ResetZoomAndPosition()
+        {
+            // Reset zoom factor and position
+            zoomFactor = 1.0f;
+            pictureBox1.Size = new Size(originalImage.Width, originalImage.Height);
+            pictureBox1.Location = new Point(0, 0);
+        }
+
         #endregion
+
     }
 }
