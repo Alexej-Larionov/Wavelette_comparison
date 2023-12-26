@@ -125,14 +125,13 @@ namespace Wavelette_comparison
             double step = 1 / length;
             Vector<double> values = Vector<double>.Build.Dense(System.Convert.ToInt32(length));
             double T = 0;
-            int i = 0;
-            for (double t = 0; t < 1; t+=step)
+            double t = 0;
+            Parallel.For(0, System.Convert.ToInt32(length), i =>
             {
-                if (i >= length) { break; }
+                t = System.Convert.ToDouble(i) * step;
                 T = (t - b) / a;
-                values[i] = (1 - Math.Pow(T, 2)) * Math.Exp(-1 * Math.Pow(T, 2) / 2);
-                i++;
-            }
+                values[System.Convert.ToInt32(i)] = (1 - Math.Pow(T, 2)) * Math.Exp(-1 * Math.Pow(T, 2) / 2);
+            });
             return (values);
 
         }
@@ -253,8 +252,8 @@ namespace Wavelette_comparison
             updS(S1);
             updS(S2);
             Thread thread1 = new Thread(()=>Transform(S1,S1.a,S1.b,S1.S.Count()));
-            Thread thread2 = new Thread(() => Transform(S2, S2.a, S2.b, S2.S.Count()));
             thread1.Start();
+            Thread thread2 = new Thread(() => Transform(S2, S2.a, S2.b, S2.S.Count()));
             thread2.Start();
         }
 
