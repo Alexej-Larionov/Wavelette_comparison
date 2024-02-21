@@ -13,6 +13,9 @@ using System.Threading;
 using System.Windows.Forms;
 using OfficeOpenXml;
 using NAudio.Wave;
+using System.Diagnostics;
+
+
 
 namespace Wavelette_comparison
 {
@@ -24,6 +27,7 @@ namespace Wavelette_comparison
         private bool isDragging = false;
         private float zoomFactor = 1.0f;
         private Image originalImage;
+
         public Form1()
         {
             InitializeComponent();
@@ -37,9 +41,33 @@ namespace Wavelette_comparison
         #region Drag&Drop
         private void textBox1_DragDrop(object sender, DragEventArgs e)
         {
-            string[] file = (string[])e.Data.GetData(DataFormats.FileDrop);
-            textBox1.Text = file[0];
-            ProcessMP3(file[0], S1);
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                // Get the dropped files
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                int i = 0;
+                // Check if the file is a .txt file
+                if (files.Length > 0 && Path.GetExtension(files[0]).Equals(".txt", StringComparison.OrdinalIgnoreCase))
+                {
+                    // If it's a .txt file, proceed with your original logic
+                    while (i < files.Length)
+                    {
+                        richTextBox1.Text = files[i];
+                        i++;
+                    }
+                    ProcessTextFile(files[0], S1);
+                }
+                else
+                {
+                    while (i < files.Length)
+                    {
+                        richTextBox1.Text = files[i];
+                        i++;
+                    }
+                    ProcessMP3(files[0], S1);
+
+                }
+            }
         }
         private void textBox1_DragEnter(object sender, DragEventArgs e)
         {
@@ -48,16 +76,59 @@ namespace Wavelette_comparison
         }
         private void textBox2_DragDrop(object sender, DragEventArgs e)
         {
-            string[] file = (string[])e.Data.GetData(DataFormats.FileDrop);
-            textBox2.Text = file[0];
-            ProcessMP3(file[0], S2);
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                // Get the dropped files
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                int i = 0;
+                // Check if the file is a .txt file
+                if (files.Length > 0 && Path.GetExtension(files[0]).Equals(".txt", StringComparison.OrdinalIgnoreCase))
+                {
+                    // If it's a .txt file, proceed with your original logic
+                    while (i < files.Length)
+                    {
+                        richTextBox2.Text = files[i];
+                        i++;
+                    }
+                    ProcessTextFile(files[0], S2);
+                }
+                else
+                {
+                    while (i < files.Length)
+                    {
+                        richTextBox2.Text = files[i];
+                        i++;
+                    }
+                    ProcessMP3(files[0], S2);
+
+                }
+            }
         }
         private void textBox2_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.All;
 
         }
+        private void ProcessTextFile(string filePath, Signal S)
+        {
+            // Your existing code to process the .txt file goes here
+            // ...
 
+            // For example, using the code provided in the previous response
+            List<double> list = new List<double>();
+            string[] lines = File.ReadAllLines(filePath);
+            double[] numbers = lines
+                .SelectMany(line => line.Split(' ').Select(str => double.Parse(str)))
+                .ToArray();
+            list = numbers.ToList();
+            Vector<double> vector = Vector<double>.Build.Dense(numbers);
+            S.x1 = list[list.Count - 2];
+            S.x2 = list[list.Count - 1];
+            list.RemoveAt(list.Count - 1);
+            list.RemoveAt(list.Count - 2);
+            S.write(list);
+            S.flag = 1;
+        }
 
         #endregion
         #region Process MP3
@@ -82,20 +153,20 @@ namespace Wavelette_comparison
                     {
                         // Assuming 16-bit audio, you may need to adjust based on your format
                         short sampleValue = BitConverter.ToInt16(buffer, i);
-                       // double normalizedSample = sampleValue / (double)short.MaxValue;
 
-                        // Add the normalized sample to the list
-                       // Signal.Add(normalizedSample);
                         Signal.Add(sampleValue);
 
                     }
-                    // MessageBox.Show(System.Convert.ToString(Signal));
+                    Signal = NormalizeList(Signal);
                     S.write(Signal);
+                    S.be = Signal.Count();
+                    S.b = 0;
                 }
+                S.flag = 2;
             }
         }
         #endregion
-        #region Wavelette functions
+        #region Wavelette functionsParallel
         Vector<double> HaarFun(double a, double b, double length, double step)
         {
 
@@ -122,24 +193,26 @@ namespace Wavelette_comparison
             return (values1);
 
         }
-        Vector<double> Mhat(double a, double b, double length)
+        Vector<double> MhatPar(double a, double b, Signal S)
         {
-            //double step = 1 / length;
-            Vector<double> values = Vector<double>.Build.Dense(System.Convert.ToInt32(length));
+
+            Vector<double> values = Vector<double>.Build.Dense(System.Convert.ToInt32(S.S.Count));
             double T = 0;
             double t = 0;
-            Parallel.For(0, System.Convert.ToInt32(length), i =>
+            Parallel.For(0, System.Convert.ToInt32(S.S.Count), i =>
             {
-                t = System.Convert.ToDouble(i);// * step;
+                t =S.b+((S.be-S.b)/ (S.S.Count)) * System.Convert.ToDouble(i);
                 T = (t - b) / a;
-                values[System.Convert.ToInt32(i)] = (1 - Math.Pow(T, 2)) * Math.Exp(-1 * Math.Pow(T, 2) / 2);
+                values[System.Convert.ToInt32(i)] = Math.Abs(Math.Pow(a, (-0.5f))) * (1 - Math.Pow(T, 2)) * Math.Exp((-1 * Math.Pow(T, 2)) / 2);
             });
             return (values);
 
         }
-        void Transform(Signal S, double a, double b, double length)
+        void TransformPar(Signal S, double a, double b, double length)
         {
-            
+            Stopwatch stopwatch1 = new Stopwatch();
+            Stopwatch stopwatch2 = new Stopwatch();
+
             double Bstep, Astep, A, B;
             Bstep = (S.be - S.b) / System.Convert.ToDouble(S.rezb);
             Astep = (S.ae - S.a) / System.Convert.ToDouble(S.reza);
@@ -147,16 +220,19 @@ namespace Wavelette_comparison
             B = S.b;
             double value = 1;
             Matrix<double> matrix = Matrix<double>.Build.Dense(S.reza, S.rezb);
+
+            stopwatch1.Start();
+            stopwatch2.Start();
             for (int i = 0; i < S.reza; i++)
             {
-               
-                A = i * Astep;
+
+                A =A+i * Astep;
                 for (int j = 0; j < S.rezb; j++)
                 {
-                    B = j * Bstep;
-                    value = S.S.DotProduct(Mhat(A, B, (S.S.Count)));
+                    B =B+ j * Bstep;
+                    value = S.S.DotProduct(MhatPar(A, B, S));
                     matrix[i, j] = value;
-                
+
                 }
                 if (Thread.CurrentThread.Name == "name1")
                 {
@@ -165,7 +241,7 @@ namespace Wavelette_comparison
                         progressBar1.Value = i;
                     }));
                 }
-                else 
+                else
                 {
                     this.Invoke((Action)(() =>
                     {
@@ -173,17 +249,133 @@ namespace Wavelette_comparison
                     }));
 
                 }
+
             }
+
+
             S.write(matrix);
-           // Print(S.readM());
+
+            if (Thread.CurrentThread.Name == "name1")
+            {
+                stopwatch1.Stop();
+            }
+            else
+            {
+                stopwatch2.Stop();
+            }
+            if ((progressBar1.Value == progressBar1.Maximum) && (progressBar2.Value == progressBar2.Maximum))
+            {
+                this.Invoke((Action)(() =>
+                {
+                    textBox6.Text = " Time elapsed:" + System.Convert.ToString(Math.Max(stopwatch1.ElapsedMilliseconds, stopwatch2.ElapsedMilliseconds)) + " Miliseconds";
+                    MessageBox.Show("Task complete " + " Time elapsed:" + System.Convert.ToString(Math.Max(stopwatch1.ElapsedMilliseconds, stopwatch2.ElapsedMilliseconds)) + " Miliseconds");
+                    progressBar1.Value = 0;
+                    progressBar2.Value = 0;
+                }));
+            }
+            this.Invoke((Action)(() => { textBox6.Text = " Time elapsed:" + System.Convert.ToString(Math.Max(stopwatch1.ElapsedMilliseconds, stopwatch2.ElapsedMilliseconds)) + " Miliseconds"; }));
+            stopwatch1.Reset();
+            stopwatch2.Reset();
 
         }
+        #endregion
+        #region WaveFuncSequential
+        Vector<double> MhatSeq(double a, double b, double length, Signal S)
+        {
+
+            Vector<double> values = Vector<double>.Build.Dense(System.Convert.ToInt32(length));
+            double T ;
+            double t ;
+            double tstep = (S.be-S.b)/length;
+            for (int i = 0; i < System.Convert.ToInt32(length); i++)
+            {
+                t =S.b+System.Convert.ToDouble(i)*tstep;
+                T = (t - b) / a;
+                values[System.Convert.ToInt32(i)] = (1 - Math.Pow(T, 2)) * Math.Exp(-1 * Math.Pow(T, 2) / 2);
+            }
+            return (values);
+
+        }
+        void TransformSeq(Signal S, double a, double b, double length)
+        {
+            Stopwatch stopwatch1 = new Stopwatch();
+            Stopwatch stopwatch2 = new Stopwatch();
+
+            double Bstep, Astep, A, B;
+            Bstep = (S.be - S.b) / System.Convert.ToDouble(S.rezb);
+            Astep = (S.ae - S.a) / System.Convert.ToDouble(S.reza);
+            A = S.a;
+            B = S.b;
+            double value = 1;
+            Matrix<double> matrix = Matrix<double>.Build.Dense(S.reza, S.rezb);
+
+            stopwatch1.Start();
+            stopwatch2.Start();
+            for (int i = 0; i < S.reza; i++)
+            {
+
+                A =S.a+ i * Astep;
+                for (int j = 0; j < S.rezb; j++)
+                {
+                    B =S.b+j * Bstep;
+                    value = S.S.DotProduct(MhatSeq(A, B, (S.S.Count),S));
+                    matrix[i, j] = value;
+
+                }
+                if (Thread.CurrentThread.Name == "name1")
+                {
+                    this.Invoke((Action)(() =>
+                    {
+                        progressBar1.Value = i;
+                    }));
+                }
+                else
+                {
+                    this.Invoke((Action)(() =>
+                    {
+                        progressBar2.Value = i;
+                    }));
+
+                }
+
+            }
+
+            S.write(matrix);
+
+            if (Thread.CurrentThread.Name == "name1")
+            {
+                stopwatch1.Stop();
+            }
+            else
+            {
+                stopwatch2.Stop();
+            }
+            if ((progressBar1.Value == progressBar1.Maximum) && (progressBar2.Value == progressBar2.Maximum))
+            {
+                this.Invoke((Action)(() =>
+                {
+                    textBox6.Text = " Time elapsed:" + System.Convert.ToString(Math.Max(stopwatch1.ElapsedMilliseconds, stopwatch2.ElapsedMilliseconds)) + " Miliseconds";
+                    MessageBox.Show("Task complete " + " Time elapsed:" + System.Convert.ToString(Math.Max(stopwatch1.ElapsedMilliseconds, stopwatch2.ElapsedMilliseconds)) + " Miliseconds");
+                    progressBar1.Value = 0;
+                    progressBar2.Value = 0;
+                }));
+            }
+            stopwatch1.Reset();
+            stopwatch2.Reset();
+
+        }
+        #endregion
+        #region WaveFunc Parallel Optimised
+
         #endregion
         #region PLOT
         private void PlotVector(Signal s1, Signal s2)
         {
             // Set up the Chart control
-
+            if (S1.flag == 1) { chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline; }
+            else { chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine; }
+            if (S2.flag == 1) { chart2.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline; }
+            else { chart2.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine; }
             chart1.Series[0].Points.Clear();
 
             // Add data points to the series
@@ -209,9 +401,59 @@ namespace Wavelette_comparison
 
         private void button1_Click(object sender, EventArgs e)
         {
-            PlotVector(S1, S2);
-            updS(S1);
-            updS(S2);
+            try { chart1.Series[0].Points.Clear(); }
+            catch { }
+            if (tabControl1.SelectedTab == tabPage1)
+            {
+                chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine;
+                for (int i = 0; i < S1.S.Count; i++)
+                {
+                    chart1.Series[0].Points.AddY(S1.S[i]);
+                }
+                updS(S1);
+            }
+            else 
+            {
+                Generate(S1);
+                chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+                S1.b = System.Convert.ToDouble(Range1.Text);
+                S1.be = System.Convert.ToDouble(Range2.Text);
+               // double asd = (Math.Abs((System.Convert.ToDouble(Range2.Text) - System.Convert.ToDouble(Range1.Text))));
+                double step = (Math.Abs((System.Convert.ToDouble(Range2.Text) - System.Convert.ToDouble(Range1.Text)))) / System.Convert.ToDouble(resolution.Text);
+                for (int i = 0; i < S1.S.Count; i++)
+                {
+                    chart1.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step*i,S1.S[i]);
+                }
+                updS(S1);
+            }
+
+        }
+        private void Plot2_Click(object sender, EventArgs e)
+        {
+            try { chart2.Series[0].Points.Clear(); }
+            catch { }
+            if (tabControl1.SelectedTab == tabPage1)
+            {
+                chart2.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine;
+                for (int i = 0; i < S2.S.Count; i++)
+                {
+                    chart2.Series[0].Points.AddY(S2.S[i]);
+                }
+                updS(S2);
+            }
+            else
+            {
+                Generate(S2);
+                chart2.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+                S2.b = System.Convert.ToDouble(Range1.Text);
+                S2.be = System.Convert.ToDouble(Range2.Text);
+                double step = (Math.Abs((System.Convert.ToDouble(Range2.Text) - System.Convert.ToDouble(Range1.Text)))) / System.Convert.ToDouble(resolution.Text);
+                for (int i = 0; i < S2.S.Count; i++)
+                {
+                    chart2.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step*i, S2.S[i]);
+                }
+                updS(S2);
+            }
         }
         private void textBox9_TextChanged(object sender, EventArgs e)
         {
@@ -219,44 +461,67 @@ namespace Wavelette_comparison
         }
         private void updS(Signal S)
         {
-            S1.reza = System.Convert.ToInt32(textBox3.Text);
-            S2.reza = System.Convert.ToInt32(textBox3.Text);
-            S1.rezb = System.Convert.ToInt32(textBox4.Text);
-            S2.rezb = System.Convert.ToInt32(textBox4.Text);
-            S1.a = System.Convert.ToDouble(textBox10.Text);
-            S1.ae = System.Convert.ToDouble(textBox9.Text);
-            S2.a = System.Convert.ToDouble(textBox10.Text);
-            S2.ae = System.Convert.ToDouble(textBox9.Text);
+            S.reza = System.Convert.ToInt32(textBox3.Text);
+           // S2.reza = System.Convert.ToInt32(textBox3.Text);
+            S.rezb = System.Convert.ToInt32(textBox4.Text);
+           // S2.rezb = System.Convert.ToInt32(textBox4.Text);
+            S.a = System.Convert.ToDouble(textBox10.Text);
+            S.ae = System.Convert.ToDouble(textBox9.Text);
+           // S2.a = System.Convert.ToDouble(textBox10.Text);
+            //S2.ae = System.Convert.ToDouble(textBox9.Text);
         }
 
         private async void button2_Click(object sender, EventArgs e)
         {
-            
             updS(S1);
             updS(S2);
-            progressBar1.Maximum = S1.reza;
-            progressBar2.Maximum = S2.reza;
-            Thread thread1 = new Thread(() => Transform(S1, S1.a, S1.b, S1.S.Count()));
-            Thread thread2 = new Thread(() => Transform(S2, S2.a, S2.b, S2.S.Count()));
-            thread1.Name ="name1";
-            thread2.Name ="name2";
-            thread1.Start();
-            thread2.Start();
-            if ((progressBar1.Value == progressBar1.Maximum) || (progressBar2.Value == progressBar2.Maximum)) 
+
+            progressBar1.Maximum = S1.reza - 1;
+            progressBar2.Maximum = S2.reza - 1;
+
+            if (comboBox1.SelectedIndex == 0)
             {
-                MessageBox.Show("Task complete");
-                progressBar1.Value = 0;
-                progressBar2.Value = 0;
+                Thread thread1 = new Thread(() => TransformSeq(S1, S1.a, S1.b, S1.S.Count()));
+                Thread thread2 = new Thread(() => TransformSeq(S2, S2.a, S2.b, S2.S.Count()));
+
+                thread1.Name = "name1";
+                thread2.Name = "name2";
+
+                thread1.Start();
+                thread2.Start();
             }
+            else
+            {
 
+                Thread thread1 = new Thread(() => TransformPar(S1, S1.a, S1.b, S1.S.Count()));
+                Thread thread2 = new Thread(() => TransformPar(S2, S2.a, S2.b, S2.S.Count()));
 
-        }
+                thread1.Name = "name1";
+                thread2.Name = "name2";
+
+                thread1.Start();
+                thread2.Start();
+
+            }
+            ExportMatrixToFile(S1.readM(),"output1.txt");
+            ExportMatrixToFile(S2.readM(), "output2.txt");
+         }
         private void button4_Click(object sender, EventArgs e)
         {
+            try
+            {
+                pictureBox1.Image.Dispose();
+                pictureBox2.Image.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
             GenerateAndSaveImage(S1.readM(), "output_imageA.png");
             GenerateAndSaveImage(S2.readM(), "output_imageB.png");
             pictureBox1.Image = Image.FromFile("output_imageA.png"); pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox2.Image = Image.FromFile("output_imageB.png"); pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+
 
 
         }
@@ -302,18 +567,32 @@ namespace Wavelette_comparison
         #region ColorMapping
         static Matrix<double> NormalizeMatrix(Matrix<double> matrix)
         {
-            double min = matrix.Enumerate().Min();
+
             double max = matrix.Enumerate().Max();
+            double min = double.MaxValue; // Initialize min with the maximum possible value of double
+            // Iterate through each element in the matrix
+            for (int i = 0; i < matrix.RowCount; i++)
+            {
+                for (int j = 0; j < matrix.ColumnCount; j++)
+                {
+                    // Check if the current element is not NaN and less than the current minimum
+                    if (!double.IsNaN(matrix[i, j]) && matrix[i, j] < min)
+                    {
+                        min = matrix[i, j]; // Update the minimum value
+                    }
+                }
+            }
+
+
 
             matrix.MapInplace(x => (x - min) / (max - min));
             return (matrix);
         }
         static void GenerateAndSaveImage(Matrix<double> matrix, string filePath)
         {
-            double zoomFactor = 1;
+            matrix = NormalizeMatrix(matrix);
             // Create a new Bitmap to draw the matrix
-            Bitmap bitmap = new Bitmap((int)(matrix.ColumnCount * 20 * zoomFactor), (int)(matrix.RowCount * 20 * zoomFactor));
-
+            Bitmap bitmap = new Bitmap((int)(matrix.ColumnCount), (int)(matrix.RowCount));
             // Map matrix values to colors and set pixels in the Bitmap
             for (int i = 0; i < matrix.RowCount; i++)
             {
@@ -321,24 +600,20 @@ namespace Wavelette_comparison
                 {
                     double value = matrix[i, j];
                     Color color = MapValueToColor(value);
-
-                    for (int x = 0; x < 20 * zoomFactor; x++) // Adjust pixel size for better visibility
-                    {
-                        for (int y = 0; y < 20 * zoomFactor; y++) // Adjust pixel size for better visibility
-                        {
-                            int pixelX = (int)(j * 20 * zoomFactor + x); // Adjust pixel size for better visibility
-                            int pixelY = (int)(i * 20 * zoomFactor + y); // Adjust pixel size for better visibility
-
-                            bitmap.SetPixel(pixelX, pixelY, color);
-                        }
-                    }
+                    bitmap.SetPixel(j, i, color);
                 }
             }
 
             // Save the Bitmap as an image file
-            bitmap.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
+            try
+            {
+                bitmap.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
 
-            Console.WriteLine($"Image saved to: {filePath}");
         }
 
         static Color MapValueToColor(double value)
@@ -354,7 +629,7 @@ namespace Wavelette_comparison
             return Color.FromArgb(blueComponent, 0, redComponent);
         }
         #endregion
-        #region pictureboxex
+        #region pictureboxes
         private void pictureBox1_MouseWheel(object sender, MouseEventArgs e)
         {
             // Zoom in and out using the mouse wheel
@@ -462,6 +737,134 @@ namespace Wavelette_comparison
         }
 
         #endregion
+        #region Func_gen
+        private void Generate(Signal export)
+        {
+            Mathos.Parser.MathParser parser = new Mathos.Parser.MathParser();
+            string expr = input.Text; // the expression
+            double samples = System.Convert.ToDouble(resolution.Text);
+            Vector<double> Value = Vector<double>.Build.Dense(System.Convert.ToInt32(samples));
+            double x = System.Convert.ToDouble(Range1.Text);
+            for (int i = 0; i < System.Convert.ToInt32(samples); i++)
+            {
+                parser.LocalVariables.Add("x", x);
+                Value[i] = parser.Parse(expr);
+                x += (System.Convert.ToDouble(Range2.Text) - System.Convert.ToDouble(Range1.Text)) / samples;
+                parser.LocalVariables.Clear();
+            }
+            export.S = Value;
+                                
+        }
+        #endregion
+        #region MISC
+        public static List<double> NormalizeList(List<double> values)
+        {
+            // Find the minimum and maximum values in the list
+            double minValue = double.MaxValue;
+            double maxValue = double.MinValue;
 
+            foreach (double value in values)
+            {
+                if (value < minValue)
+                    minValue = value;
+
+                if (value > maxValue)
+                    maxValue = value;
+            }
+
+            // Normalize each value to the range [0, 1]
+            List<double> normalizedValues = new List<double>();
+
+            foreach (double value in values)
+            {
+                double normalizedValue = (value - minValue) / (maxValue - minValue);
+                normalizedValues.Add(normalizedValue);
+            }
+
+            return normalizedValues;
+        }
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void Range1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Range2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void Distribution_Click(object sender, EventArgs e)
+        {
+
+        }
+        #endregion
+        #region export to txt
+        public static void ExportMatrixToFile(Matrix<double> matrix, string filePath)
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(filePath))
+                {
+                    int rows = matrix.RowCount;
+                    int columns = matrix.ColumnCount;
+
+                    for (int i = 0; i < rows; i++)
+                    {
+                        for (int j = 0; j < columns; j++)
+                        {
+                            if (!double.IsNaN(matrix[i, j])) 
+                            {
+                                writer.Write(matrix[i, j]);
+                                writer.Write("|");
+                            }
+                            else 
+                            {
+                                writer.Write("0,0");
+                                writer.Write("|");
+                                
+                            }
+
+                        }
+
+                       // writer.WriteLine(); // Move to the next line for the next row
+                    }
+                }
+
+                Console.WriteLine($"Matrix exported to {filePath} successfully!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+        #endregion
     }
 }

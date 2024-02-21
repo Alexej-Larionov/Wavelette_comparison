@@ -18,10 +18,15 @@ namespace Wavelette_comparison
         public double b=0;
         public double be=0;
         public double progress = 0;
+        public double x1 = 0;
+        public double x2 = 0;
+        public int flag = 0;
+
+
         public void write(List<double> A)
         {
             this.S = Vector<double>.Build.DenseOfEnumerable(A);
-            this.be = this.S.Count();
+            //this.be = this.S.Count();
         }
         public void write(Matrix<double> A)
         {
