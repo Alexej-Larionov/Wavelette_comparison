@@ -30,12 +30,12 @@ namespace Wavelette_comparison
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -117,20 +117,20 @@ namespace Wavelette_comparison
             // 
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            chartArea5.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea5);
+            legend5.Name = "Legend1";
+            this.chart1.Legends.Add(legend5);
             this.chart1.Location = new System.Drawing.Point(28, 19);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine;
-            series1.Color = System.Drawing.Color.OrangeRed;
-            series1.IsXValueIndexed = true;
-            series1.Legend = "Legend1";
-            series1.Name = "First file";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(796, 251);
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine;
+            series5.Color = System.Drawing.Color.OrangeRed;
+            series5.IsXValueIndexed = true;
+            series5.Legend = "Legend1";
+            series5.Name = "First file";
+            this.chart1.Series.Add(series5);
+            this.chart1.Size = new System.Drawing.Size(779, 251);
             this.chart1.TabIndex = 2;
             this.chart1.Text = "chart1";
             // 
@@ -138,18 +138,18 @@ namespace Wavelette_comparison
             // 
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chart2.Legends.Add(legend2);
+            chartArea6.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea6);
+            legend6.Name = "Legend1";
+            this.chart2.Legends.Add(legend6);
             this.chart2.Location = new System.Drawing.Point(28, 293);
             this.chart2.Name = "chart2";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine;
-            series2.Legend = "Legend1";
-            series2.Name = "Second file";
-            this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(796, 251);
+            series6.ChartArea = "ChartArea1";
+            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine;
+            series6.Legend = "Legend1";
+            series6.Name = "Second file";
+            this.chart2.Series.Add(series6);
+            this.chart2.Size = new System.Drawing.Size(779, 251);
             this.chart2.TabIndex = 3;
             this.chart2.Text = "chart2";
             // 
@@ -206,7 +206,7 @@ namespace Wavelette_comparison
             this.textBox9.Name = "textBox9";
             this.textBox9.Size = new System.Drawing.Size(39, 20);
             this.textBox9.TabIndex = 13;
-            this.textBox9.Text = "2";
+            this.textBox9.Text = "1";
             this.textBox9.TextChanged += new System.EventHandler(this.textBox9_TextChanged);
             // 
             // textBox10
@@ -280,7 +280,7 @@ namespace Wavelette_comparison
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.Location = new System.Drawing.Point(33, 19);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(966, 600);
+            this.pictureBox1.Size = new System.Drawing.Size(949, 600);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 18;
             this.pictureBox1.TabStop = false;
@@ -292,7 +292,7 @@ namespace Wavelette_comparison
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox2.Location = new System.Drawing.Point(33, 625);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(966, 600);
+            this.pictureBox2.Size = new System.Drawing.Size(949, 600);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 19;
             this.pictureBox2.TabStop = false;
@@ -317,7 +317,7 @@ namespace Wavelette_comparison
             this.groupBox1.Controls.Add(this.chart2);
             this.groupBox1.Location = new System.Drawing.Point(218, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1831, 559);
+            this.groupBox1.Size = new System.Drawing.Size(1814, 559);
             this.groupBox1.TabIndex = 21;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Plots";
@@ -458,6 +458,7 @@ namespace Wavelette_comparison
             this.input.Name = "input";
             this.input.Size = new System.Drawing.Size(173, 20);
             this.input.TabIndex = 3;
+            this.input.Text = "sin(x^2)";
             // 
             // resolution
             // 
@@ -465,6 +466,7 @@ namespace Wavelette_comparison
             this.resolution.Name = "resolution";
             this.resolution.Size = new System.Drawing.Size(74, 20);
             this.resolution.TabIndex = 2;
+            this.resolution.Text = "100";
             // 
             // Range1
             // 
@@ -472,6 +474,7 @@ namespace Wavelette_comparison
             this.Range1.Name = "Range1";
             this.Range1.Size = new System.Drawing.Size(74, 20);
             this.Range1.TabIndex = 1;
+            this.Range1.Text = "0";
             this.Range1.TextChanged += new System.EventHandler(this.Range1_TextChanged);
             // 
             // Range2
@@ -480,6 +483,7 @@ namespace Wavelette_comparison
             this.Range2.Name = "Range2";
             this.Range2.Size = new System.Drawing.Size(74, 20);
             this.Range2.TabIndex = 0;
+            this.Range2.Text = "10";
             this.Range2.TextChanged += new System.EventHandler(this.Range2_TextChanged);
             // 
             // comboBox1
@@ -504,7 +508,7 @@ namespace Wavelette_comparison
             this.groupBox3.Controls.Add(this.pictureBox1);
             this.groupBox3.Location = new System.Drawing.Point(12, 577);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(1030, 1300);
+            this.groupBox3.Size = new System.Drawing.Size(1013, 1300);
             this.groupBox3.TabIndex = 23;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Spectrograms";

@@ -843,14 +843,17 @@ namespace Wavelette_comparison
                             if (!double.IsNaN(matrix[i, j])) 
                             {
                                 writer.Write(matrix[i, j]);
-                                writer.Write("|");
+                                //if (i != rows - 1)
+                                //    writer.Write("|");
                             }
                             else 
                             {
                                 writer.Write("0,0");
-                                writer.Write("|");
-                                
+                                //if (i != rows - 1)
+                                  //  writer.Write("|");
+
                             }
+                            if (i * j != (rows-1) * (columns-1)) { writer.Write("|"); }
 
                         }
 
