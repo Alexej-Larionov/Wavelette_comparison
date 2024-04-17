@@ -22,7 +22,6 @@ namespace Wavelette_comparison
     public partial class Form1 : Form
     {
         Signal S1 = new Signal();
-        Signal S2 = new Signal();
         private Point mouseDownPoint;
         private bool isDragging = false;
         private float zoomFactor = 1.0f;
@@ -96,33 +95,8 @@ namespace Wavelette_comparison
         }
         private void textBox2_DragDrop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                // Get the dropped files
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                int i = 0;
-                // Check if the file is a .txt file
-                if (files.Length > 0 && Path.GetExtension(files[0]).Equals(".txt", StringComparison.OrdinalIgnoreCase))
-                {
-                    // If it's a .txt file, proceed with your original logic
-                    while (i < files.Length)
-                    {
-                        richTextBox2.Text = files[i];
-                        i++;
-                    }
-                    ProcessTextFile(files[0], S2);
-                }
-                else
-                {
-                    while (i < files.Length)
-                    {
-                        richTextBox2.Text = files[i];
-                        i++;
-                    }
-                    ProcessMP3(files[0], S2);
+           
 
-                }
-            }
         }
         private void textBox2_DragEnter(object sender, DragEventArgs e)
         {
@@ -187,6 +161,7 @@ namespace Wavelette_comparison
         }
         #endregion
         #region Wavelette functionsParallel
+        
         Vector<double> HaarFun(double a, double b, double length, double step)
         {
 
@@ -254,50 +229,22 @@ namespace Wavelette_comparison
                     matrix[i, j] = value;
 
                 }
-                if (Thread.CurrentThread.Name == "name1")
-                {
-                    this.Invoke((Action)(() =>
-                    {
-                        progressBar1.Value = i;
-                    }));
-                }
-                else
-                {
-                    this.Invoke((Action)(() =>
-                    {
-                        progressBar2.Value = i;
-                    }));
 
-                }
+                        progressBar1.Value = i;
+          
 
             }
 
 
             S.write(matrix);
 
-            if (Thread.CurrentThread.Name == "name1")
-            {
+           
                 stopwatch1.Stop();
-            }
-            else
-            {
-                stopwatch2.Stop();
-            }
-            if ((progressBar1.Value == progressBar1.Maximum) && (progressBar2.Value == progressBar2.Maximum))
-            {
-                this.Invoke((Action)(() =>
-                {
-                    textBox6.Text = " Time elapsed:" + System.Convert.ToString(Math.Max(stopwatch1.ElapsedMilliseconds, stopwatch2.ElapsedMilliseconds)) + " Miliseconds";
-                    MessageBox.Show("Task complete " + " Time elapsed:" + System.Convert.ToString(Math.Max(stopwatch1.ElapsedMilliseconds, stopwatch2.ElapsedMilliseconds)) + " Miliseconds");
-                    progressBar1.Value = 0;
-                    progressBar2.Value = 0;
-                }));
-            }
-            this.Invoke((Action)(() => { textBox6.Text = " Time elapsed:" + System.Convert.ToString(Math.Max(stopwatch1.ElapsedMilliseconds, stopwatch2.ElapsedMilliseconds)) + " Miliseconds"; }));
-            stopwatch1.Reset();
-            stopwatch2.Reset();
+            
+            
 
         }
+        
         #endregion
         #region WaveFuncSequential
         Vector<double> MhatSeq(double a, double b, double length, Signal S)
@@ -343,60 +290,30 @@ namespace Wavelette_comparison
                     matrix[i, j] = value;
 
                 }
-                if (Thread.CurrentThread.Name == "name1")
-                {
-                    this.Invoke((Action)(() =>
-                    {
-                        progressBar1.Value = i;
-                    }));
-                }
-                else
-                {
-                    this.Invoke((Action)(() =>
-                    {
-                        progressBar2.Value = i;
-                    }));
 
-                }
+                        progressBar1.Value = i;
+
 
             }
 
             S.write(matrix);
 
-            if (Thread.CurrentThread.Name == "name1")
-            {
+            
                 stopwatch1.Stop();
-            }
-            else
-            {
-                stopwatch2.Stop();
-            }
-            if ((progressBar1.Value == progressBar1.Maximum) && (progressBar2.Value == progressBar2.Maximum))
-            {
-                this.Invoke((Action)(() =>
-                {
-                    textBox6.Text = " Time elapsed:" + System.Convert.ToString(Math.Max(stopwatch1.ElapsedMilliseconds, stopwatch2.ElapsedMilliseconds)) + " Miliseconds";
-                    MessageBox.Show("Task complete " + " Time elapsed:" + System.Convert.ToString(Math.Max(stopwatch1.ElapsedMilliseconds, stopwatch2.ElapsedMilliseconds)) + " Miliseconds");
-                    progressBar1.Value = 0;
-                    progressBar2.Value = 0;
-                }));
-            }
+            
+       
             stopwatch1.Reset();
-            stopwatch2.Reset();
+            
 
         }
         #endregion
-        #region WaveFunc Parallel Optimised
-
-        #endregion
         #region PLOT
-        private void PlotVector(Signal s1, Signal s2)
+        private void PlotVector(Signal s1)
         {
             // Set up the Chart control
             if (S1.flag == 1) { chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline; }
             else { chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine; }
-            if (S2.flag == 1) { chart2.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline; }
-            else { chart2.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine; }
+            
             chart1.Series[0].Points.Clear();
 
             // Add data points to the series
@@ -404,16 +321,7 @@ namespace Wavelette_comparison
             {
                 chart1.Series[0].Points.AddY(S1.S[i]);
             }
-            // Set up the Chart control
-
-
-            chart2.Series[0].Points.Clear();
-
-            // Add data points to the series
-            for (int i = 0; i < S2.S.Count; i++)
-            {
-                chart2.Series[0].Points.AddY(S2.S[i]);
-            }
+            // Set up the Chart contro
 
 
         }
@@ -455,30 +363,7 @@ namespace Wavelette_comparison
         }
         private void Plot2_Click(object sender, EventArgs e)
         {
-            try { chart2.Series[0].Points.Clear(); }
-            catch { }
-            if (tabControl1.SelectedTab == tabPage1)
-            {
-                chart2.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine;
-                for (int i = 0; i < S2.S.Count; i++)
-                {
-                    chart2.Series[0].Points.AddY(S2.S[i]);
-                }
-                updS(S2);
-            }
-            else
-            {
-                Generate(S2);
-                chart2.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-                S2.b = System.Convert.ToDouble(Range1.Text);
-                S2.be = System.Convert.ToDouble(Range2.Text);
-                double step = (Math.Abs((System.Convert.ToDouble(Range2.Text) - System.Convert.ToDouble(Range1.Text)))) / System.Convert.ToDouble(resolution.Text);
-                for (int i = 0; i < S2.S.Count; i++)
-                {
-                    chart2.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step*i, S2.S[i]);
-                }
-                updS(S2);
-            }
+           
         }
         private void textBox9_TextChanged(object sender, EventArgs e)
         {
@@ -499,53 +384,41 @@ namespace Wavelette_comparison
         private async void button2_Click(object sender, EventArgs e)
         {
             updS(S1);
-            updS(S2);
 
             progressBar1.Maximum = S1.reza - 1;
-            progressBar2.Maximum = S2.reza - 1;
 
             if (comboBox1.SelectedIndex == 0)
             {
                 Thread thread1 = new Thread(() => TransformSeq(S1, S1.a, S1.b, S1.S.Count()));
-                Thread thread2 = new Thread(() => TransformSeq(S2, S2.a, S2.b, S2.S.Count()));
 
                 thread1.Name = "name1";
-                thread2.Name = "name2";
 
                 thread1.Start();
-                thread2.Start();
             }
             else
             {
 
                 Thread thread1 = new Thread(() => TransformPar(S1, S1.a, S1.b, S1.S.Count()));
-                Thread thread2 = new Thread(() => TransformPar(S2, S2.a, S2.b, S2.S.Count()));
 
                 thread1.Name = "name1";
-                thread2.Name = "name2";
 
                 thread1.Start();
-                thread2.Start();
 
             }
             ExportMatrixToFile(S1.readM(),"output1.txt");
-            ExportMatrixToFile(S2.readM(), "output2.txt");
          }
         private void button4_Click(object sender, EventArgs e)
         {
             try
             {
                 pictureBox1.Image.Dispose();
-                pictureBox2.Image.Dispose();
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
             GenerateAndSaveImage(S1.readM(), "output_imageA.png");
-            GenerateAndSaveImage(S2.readM(), "output_imageB.png");
             pictureBox1.Image = Image.FromFile("output_imageA.png"); pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox2.Image = Image.FromFile("output_imageB.png"); pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
 
 
 
