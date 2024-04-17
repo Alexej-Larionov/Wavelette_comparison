@@ -341,12 +341,18 @@ namespace Wavelette_comparison
         {
             try { chart1.Series[0].Points.Clear(); chart2.Series[0].Points.Clear(); }
             catch { }
+            
             if (tabControl1.SelectedTab == tabPage1)
             {
+                int N = S1.S.Count;
+                Complex[] result = new Complex[N];
+                result = FourierTransform(S1.S);
                 chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine;
                 for (int i = 0; i < S1.S.Count; i++)
                 {
                     chart1.Series[0].Points.AddY(S1.S[i]);
+                    chart2.Series[0].Points.AddY( result[i].Magnitude);
+
                 }
                 updS(S1);
             }
@@ -363,7 +369,7 @@ namespace Wavelette_comparison
                 for (int i = 0; i < S1.S.Count; i++)
                 {
                     chart1.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step*i,S1.S[i]);
-                    chart2.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step*i,result[i].Real);
+                    chart2.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step*i,result[i].Magnitude);
 
                 }
                 updS(S1);
