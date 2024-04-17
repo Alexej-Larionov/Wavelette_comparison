@@ -3,10 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace Wavelette_comparison
 {
+    public static class ColorUtils
+    {
+        public static Color ToMediaColor(this byte[] rgb)
+        {
+            return Color.FromArgb(rgb[0], rgb[1], rgb[2]);
+        }
+    }
     class Signal
     {
         public Vector<double> S;

@@ -93,6 +93,9 @@
       <HintPath>..\packages\OfficeOpenXml.Extension.AspNetCore.1.0.0\lib\netstandard2.0\OfficeOpenXml.Extension.AspNetCore.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="SciColorMaps.Portable, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ar1st0crat.SciColorMaps.Portable.1.0.2\lib\portable40-net40+win8+wpa81\SciColorMaps.Portable.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />

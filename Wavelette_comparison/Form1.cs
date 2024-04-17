@@ -15,6 +15,7 @@ using OfficeOpenXml;
 using NAudio.Wave;
 using System.Diagnostics;
 using System.Numerics;
+using SciColorMaps.Portable;
 
 
 namespace Wavelette_comparison
@@ -299,14 +300,20 @@ namespace Wavelette_comparison
             }
 
             S.write(matrix);
+            try
+            {
+                pictureBox1.Image.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+            GenerateAndSaveImage(S1.readM(), "output_imageA.png");
+            pictureBox1.Image = Image.FromFile("output_imageA.png"); pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            ExportMatrixToFile(S1.readM(), "output1.txt");
 
-            
-                stopwatch1.Stop();
-            
-       
-            stopwatch1.Reset();
-            
-
+            stopwatch1.Stop();        
+            stopwatch1.Reset();           
         }
         #endregion
         #region PLOT
@@ -396,16 +403,8 @@ namespace Wavelette_comparison
                 thread1.Name = "name1";
 
                 thread1.Start();
-                try
-                {
-                    pictureBox1.Image.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("An error occurred: " + ex.Message);
-                }
-                GenerateAndSaveImage(S1.readM(), "output_imageA.png");
-                pictureBox1.Image = Image.FromFile("output_imageA.png"); pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+
+               
             }
             else
             {
@@ -415,18 +414,9 @@ namespace Wavelette_comparison
                 thread1.Name = "name1";
 
                 thread1.Start();
-                try
-                {
-                    pictureBox1.Image.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("An error occurred: " + ex.Message);
-                }
-                GenerateAndSaveImage(S1.readM(), "output_imageA.png");
-                pictureBox1.Image = Image.FromFile("output_imageA.png"); pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                
             }
-            ExportMatrixToFile(S1.readM(),"output1.txt");
+            
          }
         private void button4_Click(object sender, EventArgs e)
         {
@@ -488,8 +478,7 @@ namespace Wavelette_comparison
         {
 
             double max = matrix.Enumerate().Max();
-            double min = double.MaxValue; // Initialize min with the maximum possible value of double
-            // Iterate through each element in the matrix
+            double min = double.MaxValue;
             for (int i = 0; i < matrix.RowCount; i++)
             {
                 for (int j = 0; j < matrix.ColumnCount; j++)
@@ -501,15 +490,28 @@ namespace Wavelette_comparison
                     }
                 }
             }
-
-
-
             matrix.MapInplace(x => (x - min) / (max - min));
             return (matrix);
         }
+        
         static void GenerateAndSaveImage(Matrix<double> matrix, string filePath)
         {
-            matrix = NormalizeMatrix(matrix);
+
+            matrix = NormalizeMatrix(matrix);    
+            double max = matrix.Enumerate().Max();
+            double min = double.MaxValue;
+            for (int i = 0; i < matrix.RowCount; i++)
+                {
+                 for (int j = 0; j < matrix.ColumnCount; j++)
+                    {
+                        // Check if the current element is not NaN and less than the current minimum
+                        if (!double.IsNaN(matrix[i, j]) && matrix[i, j] < min)
+                        {
+                            min = matrix[i, j]; // Update the minimum value
+                        }
+                    }
+                }            
+            var cmap1 = new SciColorMaps.Portable.ColorMap("coolwarm",min,max);
             // Create a new Bitmap to draw the matrix
             Bitmap bitmap = new Bitmap((int)(matrix.ColumnCount), (int)(matrix.RowCount));
             // Map matrix values to colors and set pixels in the Bitmap
@@ -518,7 +520,8 @@ namespace Wavelette_comparison
                 for (int j = 0; j < matrix.ColumnCount; j++)
                 {
                     double value = matrix[i, j];
-                    Color color = MapValueToColor(value);
+                    //Color color = MapValueToColor(value);
+                    Color color = cmap1[value].ToMediaColor();
                     bitmap.SetPixel(j, i, color);
                 }
             }
