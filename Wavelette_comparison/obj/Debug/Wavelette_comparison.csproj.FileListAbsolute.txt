@@ -60,3 +60,4 @@ C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\
 C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\zh-Hant\FSharp.Core.resources.dll
 C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\Mathos.dll
 C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\MathParser.dll
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\MathLinq.dll

@@ -14,7 +14,7 @@ using System.Windows.Forms;
 using OfficeOpenXml;
 using NAudio.Wave;
 using System.Diagnostics;
-
+using System.Numerics;
 
 
 namespace Wavelette_comparison
@@ -37,7 +37,27 @@ namespace Wavelette_comparison
         {
 
         }
+        #region Fourier
+        static Complex[] FourierTransform(Vector<double> inputValues)
+        {
+            int N = inputValues.Count;
+            Complex[] result = new Complex[N];
 
+            for (int k = 0; k < N; k++)
+            {
+                Complex sum = Complex.Zero;
+                for (int n = 0; n < N; n++)
+                {
+                    double angle = 2 * Math.PI * k * n / N;
+                    Complex twiddleFactor = Complex.Exp(new Complex(0, -angle));
+                    sum += inputValues[n] * twiddleFactor;
+                }
+                result[k] = sum;
+            }
+
+            return result;
+        }
+        #endregion
         #region Drag&Drop
         private void textBox1_DragDrop(object sender, DragEventArgs e)
         {
@@ -293,6 +313,7 @@ namespace Wavelette_comparison
                 T = (t - b) / a;
                 values[System.Convert.ToInt32(i)] = (1 - Math.Pow(T, 2)) * Math.Exp(-1 * Math.Pow(T, 2) / 2);
             }
+            
             return (values);
 
         }
@@ -415,14 +436,18 @@ namespace Wavelette_comparison
             else 
             {
                 Generate(S1);
+                int N = S1.S.Count;
+                Complex[] result = new Complex[N];
+                result=FourierTransform(S1.S);
                 chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
                 S1.b = System.Convert.ToDouble(Range1.Text);
                 S1.be = System.Convert.ToDouble(Range2.Text);
-               // double asd = (Math.Abs((System.Convert.ToDouble(Range2.Text) - System.Convert.ToDouble(Range1.Text))));
                 double step = (Math.Abs((System.Convert.ToDouble(Range2.Text) - System.Convert.ToDouble(Range1.Text)))) / System.Convert.ToDouble(resolution.Text);
                 for (int i = 0; i < S1.S.Count; i++)
                 {
                     chart1.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step*i,S1.S[i]);
+                    chart2.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step*i,result[i].Magnitude);
+
                 }
                 updS(S1);
             }
