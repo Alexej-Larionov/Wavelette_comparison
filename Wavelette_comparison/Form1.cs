@@ -230,8 +230,10 @@ namespace Wavelette_comparison
 
                 }
 
-                        progressBar1.Value = i;
-          
+                this.Invoke((Action)(() =>
+                {
+                    progressBar1.Value = i;
+                }));
 
             }
 
@@ -267,7 +269,6 @@ namespace Wavelette_comparison
         void TransformSeq(Signal S, double a, double b, double length)
         {
             Stopwatch stopwatch1 = new Stopwatch();
-            Stopwatch stopwatch2 = new Stopwatch();
 
             double Bstep, Astep, A, B;
             Bstep = (S.be - S.b) / System.Convert.ToDouble(S.rezb);
@@ -278,7 +279,6 @@ namespace Wavelette_comparison
             Matrix<double> matrix = Matrix<double>.Build.Dense(S.reza, S.rezb);
 
             stopwatch1.Start();
-            stopwatch2.Start();
             for (int i = 0; i < S.reza; i++)
             {
 
@@ -291,8 +291,10 @@ namespace Wavelette_comparison
 
                 }
 
-                        progressBar1.Value = i;
-
+                this.Invoke((Action)(() =>
+                {
+                    progressBar1.Value = i;
+                }));
 
             }
 
@@ -330,7 +332,7 @@ namespace Wavelette_comparison
 
         private void button1_Click(object sender, EventArgs e)
         {
-            try { chart1.Series[0].Points.Clear(); }
+            try { chart1.Series[0].Points.Clear(); chart2.Series[0].Points.Clear(); }
             catch { }
             if (tabControl1.SelectedTab == tabPage1)
             {
@@ -354,7 +356,7 @@ namespace Wavelette_comparison
                 for (int i = 0; i < S1.S.Count; i++)
                 {
                     chart1.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step*i,S1.S[i]);
-                    chart2.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step*i,result[i].Magnitude);
+                    chart2.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step*i,result[i].Real);
 
                 }
                 updS(S1);
@@ -394,6 +396,16 @@ namespace Wavelette_comparison
                 thread1.Name = "name1";
 
                 thread1.Start();
+                try
+                {
+                    pictureBox1.Image.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("An error occurred: " + ex.Message);
+                }
+                GenerateAndSaveImage(S1.readM(), "output_imageA.png");
+                pictureBox1.Image = Image.FromFile("output_imageA.png"); pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             }
             else
             {
@@ -403,7 +415,16 @@ namespace Wavelette_comparison
                 thread1.Name = "name1";
 
                 thread1.Start();
-
+                try
+                {
+                    pictureBox1.Image.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("An error occurred: " + ex.Message);
+                }
+                GenerateAndSaveImage(S1.readM(), "output_imageA.png");
+                pictureBox1.Image = Image.FromFile("output_imageA.png"); pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             }
             ExportMatrixToFile(S1.readM(),"output1.txt");
          }
