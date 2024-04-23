@@ -15,6 +15,7 @@ using OfficeOpenXml;
 using NAudio.Wave;
 using System.Diagnostics;
 using System.Numerics;
+using System.Globalization;
 using SciColorMaps.Portable;
 
 
@@ -23,6 +24,7 @@ namespace Wavelette_comparison
     public partial class Form1 : Form
     {
         Signal S1 = new Signal();
+        List<Signal> Sv = new List<Signal>();
         private Point mouseDownPoint;
         private bool isDragging = false;
         private float zoomFactor = 1.0f;
@@ -67,26 +69,12 @@ namespace Wavelette_comparison
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 int i = 0;
                 // Check if the file is a .txt file
-                if (files.Length > 0 && Path.GetExtension(files[0]).Equals(".txt", StringComparison.OrdinalIgnoreCase))
-                {
-                    // If it's a .txt file, proceed with your original logic
                     while (i < files.Length)
                     {
                         richTextBox1.Text = files[i];
                         i++;
                     }
-                    ProcessTextFile(files[0], S1);
-                }
-                else
-                {
-                    while (i < files.Length)
-                    {
-                        richTextBox1.Text = files[i];
-                        i++;
-                    }
-                    ProcessMP3(files[0], S1);
-
-                }
+                    ProcessMP3(files[0], S1);                
             }
         }
         private void textBox1_DragEnter(object sender, DragEventArgs e)
@@ -152,7 +140,7 @@ namespace Wavelette_comparison
                         Signal.Add(sampleValue);
 
                     }
-                    Signal = NormalizeList(Signal);
+                    //Signal = NormalizeList(Signal);
                     S.write(Signal);
                     S.be = Signal.Count();
                     S.b = 0;
@@ -161,8 +149,74 @@ namespace Wavelette_comparison
             }
         }
         #endregion
+        #region CSV process
+        private void textBox2_DragDrop_1(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                // Get the dropped files
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                int i = 0;
+                // Check if the file is a .txt file
+                while (i < files.Length)
+                {
+                    richTextBox2.Text = files[i];
+                    i++;
+                }
+                ReadCSV(files[0],S1);
+            }
+        }
+        private void ReadCSV(string folderPath, Signal S)
+        {
+            var count = new DirectoryInfo(folderPath).GetFiles().Length.ToString();
+            int Text = System.Convert.ToInt32(count);
+            // Предполагаем, что в папке только один CSV файл.
+            if (Text!=1) 
+            {
+                Signal[] Signals=new Signal[Text];
+                var filePath = Directory.GetFiles(folderPath, "*.csv");
+                Parallel.For(0, Text, i =>
+                 {
+                     var lines = File.ReadAllLines(filePath[i]);
+                     List<double> secondColumnValues = new List<double>();// Исключаем строку заголовков
+                     for (int j = 1; j < lines.Length; j++)
+                     {
+                         var columns = lines[j].Split(',');
+                         if (columns.Length > 1 && float.TryParse(columns[1], NumberStyles.Any, CultureInfo.InvariantCulture, out float value))
+                         {
+                             secondColumnValues.Add(value);
+                         }
+                     }
+                     Signals[i].write(secondColumnValues);
+                     Signals[i].be = secondColumnValues.Count();
+                     Signals[i].b = 0;
+                 }
+                );
+            }
+            else 
+            {
+                var filePath = Directory.GetFiles(folderPath, "*.csv")[0];
+                var lines = File.ReadAllLines(filePath);
+
+                // Создаем массив для хранения значений второго столбца.
+                List<double> secondColumnValues = new List<double>();// Исключаем строку заголовков
+                for (int i = 1; i < lines.Length; i++)
+                {
+                    var columns = lines[i].Split(',');
+                    if (columns.Length > 1 && float.TryParse(columns[1], NumberStyles.Any, CultureInfo.InvariantCulture, out float value))
+                    {
+                        secondColumnValues.Add(value);
+                    }
+                }
+                S.write(secondColumnValues);
+                S.be = secondColumnValues.Count();
+                S.b = 0;
+            }
+            
+        }
+        #endregion
         #region Wavelette functionsParallel
-        
+
         Vector<double> HaarFun(double a, double b, double length, double step)
         {
 
@@ -358,21 +412,39 @@ namespace Wavelette_comparison
             }
             else 
             {
-                Generate(S1);
-                int N = S1.S.Count;
-                Complex[] result = new Complex[N];
-                result=FourierTransform(S1.S);
-                chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-                S1.b = System.Convert.ToDouble(Range1.Text);
-                S1.be = System.Convert.ToDouble(Range2.Text);
-                double step = (Math.Abs((System.Convert.ToDouble(Range2.Text) - System.Convert.ToDouble(Range1.Text)))) / System.Convert.ToDouble(resolution.Text);
-                for (int i = 0; i < S1.S.Count; i++)
+                if (tabControl1.SelectedTab == tabPage2) 
                 {
-                    chart1.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step*i,S1.S[i]);
-                    chart2.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step*i,result[i].Magnitude);
+                    Generate(S1);
+                    int N = S1.S.Count;
+                    Complex[] result = new Complex[N];
+                    result = FourierTransform(S1.S);
+                    chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+                    S1.b = System.Convert.ToDouble(Range1.Text);
+                    S1.be = System.Convert.ToDouble(Range2.Text);
+                    double step = (Math.Abs((System.Convert.ToDouble(Range2.Text) - System.Convert.ToDouble(Range1.Text)))) / System.Convert.ToDouble(resolution.Text);
+                    for (int i = 0; i < S1.S.Count; i++)
+                    {
+                        chart1.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step * i, S1.S[i]);
+                        chart2.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step * i, result[i].Magnitude);
 
+                    }
+                    updS(S1);
                 }
-                updS(S1);
+                else 
+                {
+                    int N = S1.S.Count;
+                    Complex[] result = new Complex[N];
+                    result = FourierTransform(S1.S);
+                    chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+                    for (int i = 0; i < S1.S.Count; i++)
+                    {
+                        chart1.Series[0].Points.AddXY( i, S1.S[i]);
+                        chart2.Series[0].Points.AddXY( i, result[i].Magnitude);
+
+                    }
+                    updS(S1);
+                }
+                    
             }
 
         }
@@ -797,5 +869,7 @@ namespace Wavelette_comparison
             }
         }
         #endregion
+
+       
     }
 }
