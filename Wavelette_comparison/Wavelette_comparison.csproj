@@ -129,6 +129,12 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Universal.Common, Version=8.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Universal.Common.8.0.0\lib\netstandard2.0\Universal.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Universal.Common.Mathematics, Version=4.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Universal.Common.Mathematics.4.2.0\lib\netstandard2.0\Universal.Common.Mathematics.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>

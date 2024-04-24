@@ -203,7 +203,7 @@ namespace Wavelette_comparison
                 for (int i = 1; i < lines.Length; i++)
                 {
                     var columns = lines[i].Split(',');
-                    if (columns.Length > 1 && float.TryParse(columns[1], NumberStyles.Any, CultureInfo.InvariantCulture, out float value))
+                    if (columns.Length > 1 && float.TryParse(columns[4], NumberStyles.Any, CultureInfo.InvariantCulture, out float value))
                     {
                         secondColumnValues.Add(value);
                     }
@@ -363,7 +363,7 @@ namespace Wavelette_comparison
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
             GenerateAndSaveImage(S1.readM(), "output_imageA.png");
-            pictureBox1.Image = Image.FromFile("output_imageA.png"); pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox1.Image = Image.FromFile("output_imageA.png"); pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             ExportMatrixToFile(S1.readM(), "output1.txt");
 
             stopwatch1.Stop();        
@@ -715,7 +715,7 @@ namespace Wavelette_comparison
             }
         }
         private void ApplyZoomAndPosition()
-        {
+        {/*
             // Apply zoom and position adjustments
             int newWidth = (int)(originalImage.Width * zoomFactor);
             int newHeight = (int)(originalImage.Height * zoomFactor);
@@ -725,15 +725,15 @@ namespace Wavelette_comparison
             int newX = (int)(mouseDownPoint.X - zoomFactor * mouseDownPoint.X);
             int newY = (int)(mouseDownPoint.Y - zoomFactor * mouseDownPoint.Y);
 
-            pictureBox1.Location = new Point(newX, newY);
+            pictureBox1.Location = new Point(newX, newY);*/
         }
 
         private void ResetZoomAndPosition()
-        {
+        {/*
             // Reset zoom factor and position
             zoomFactor = 1.0f;
             pictureBox1.Size = new Size(originalImage.Width, originalImage.Height);
-            pictureBox1.Location = new Point(0, 0);
+            pictureBox1.Location = new Point(0, 0);*/
         }
 
         #endregion
@@ -868,8 +868,12 @@ namespace Wavelette_comparison
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
+
         #endregion
 
-       
+        private void chart1_Click(object sender, EventArgs e)
+        {
+            
+        }
     }
 }
