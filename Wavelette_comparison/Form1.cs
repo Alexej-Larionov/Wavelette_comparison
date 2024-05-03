@@ -432,17 +432,48 @@ namespace Wavelette_comparison
                 }
                 else 
                 {
-                    int N = S1.S.Count;
-                    Complex[] result = new Complex[N];
-                    result = FourierTransform(S1.S);
-                    chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-                    for (int i = 0; i < S1.S.Count; i++)
+                    if (tabControl1.SelectedTab == tabPage3)
                     {
-                        chart1.Series[0].Points.AddXY( i, S1.S[i]);
-                        chart2.Series[0].Points.AddXY( i, result[i].Magnitude);
+                        int N = S1.S.Count;
+                        Complex[] result = new Complex[N];
+                        result = FourierTransform(S1.S);
+                        chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+                        for (int i = 0; i < S1.S.Count; i++)
+                        {
+                            chart1.Series[0].Points.AddXY(i, S1.S[i]);
+                            chart2.Series[0].Points.AddXY(i, result[i].Magnitude);
 
+                        }
+                        updS(S1);
                     }
-                    updS(S1);
+                    else
+                    {
+                        Random rnd = new Random();
+                        double rand;
+                        List<double> rand1=new List<double>();
+                        
+                        for (int i = 0; i < System.Convert.ToInt32(RanSampCount.Text); i++)
+                        {
+                            rand = rnd.NextDouble() + rnd.Next(System.Convert.ToInt32(RanRange1.Text), System.Convert.ToInt32(RanRange2.Text));
+                            rand1.Add(rand);
+                        }
+                        S1.write(rand1);
+                        textBox4.Text = System.Convert.ToString(S1.S.Count);
+                        int N = S1.S.Count;
+                        Complex[] result = new Complex[N];
+                        result = FourierTransform(S1.S);
+                        chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+                        S1.b = System.Convert.ToDouble(Range1.Text);
+                        S1.be = System.Convert.ToDouble(Range2.Text);
+                        double step = (Math.Abs((System.Convert.ToDouble(Range2.Text) - System.Convert.ToDouble(Range1.Text)))) / System.Convert.ToDouble(resolution.Text);
+                        for (int i = 0; i < S1.S.Count; i++)
+                        {
+                            chart1.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step * i, S1.S[i]);
+                            chart2.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step * i, result[i].Magnitude);
+
+                        }
+                        updS(S1);
+                    }
                 }
                     
             }
@@ -874,6 +905,21 @@ namespace Wavelette_comparison
         private void chart1_Click(object sender, EventArgs e)
         {
             
+        }
+
+        private void textBox15_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox14_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox13_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -30,14 +30,14 @@ namespace Wavelette_comparison
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title3 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title4 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -71,6 +71,12 @@ namespace Wavelette_comparison
             this.Range2 = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.RanSampCount = new System.Windows.Forms.TextBox();
+            this.textBox16 = new System.Windows.Forms.TextBox();
+            this.RanRange2 = new System.Windows.Forms.TextBox();
+            this.RanRange1 = new System.Windows.Forms.TextBox();
+            this.textBox13 = new System.Windows.Forms.TextBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
@@ -81,6 +87,7 @@ namespace Wavelette_comparison
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBox1
@@ -100,49 +107,49 @@ namespace Wavelette_comparison
             // 
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.chart1.Legends.Add(legend3);
             this.chart1.Location = new System.Drawing.Point(28, 263);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series1.Color = System.Drawing.Color.OrangeRed;
-            series1.IsXValueIndexed = true;
-            series1.Legend = "Legend1";
-            series1.Name = "Signal";
-            series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(1014, 251);
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series3.Color = System.Drawing.Color.OrangeRed;
+            series3.IsXValueIndexed = true;
+            series3.Legend = "Legend1";
+            series3.Name = "Signal";
+            series3.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
+            this.chart1.Series.Add(series3);
+            this.chart1.Size = new System.Drawing.Size(980, 251);
             this.chart1.TabIndex = 2;
             this.chart1.Text = "chart1";
-            title1.Name = "Title1";
-            title1.Text = "Signal";
-            this.chart1.Titles.Add(title1);
+            title3.Name = "Title1";
+            title3.Text = "Signal";
+            this.chart1.Titles.Add(title3);
             this.chart1.Click += new System.EventHandler(this.chart1_Click);
             // 
             // chart2
             // 
             this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chart2.Legends.Add(legend2);
+            chartArea4.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea4);
+            legend4.Name = "Legend1";
+            this.chart2.Legends.Add(legend4);
             this.chart2.Location = new System.Drawing.Point(28, 19);
             this.chart2.Name = "chart2";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series2.Legend = "Legend1";
-            series2.Name = "Fourier";
-            this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(1014, 251);
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series4.Legend = "Legend1";
+            series4.Name = "Fourier";
+            this.chart2.Series.Add(series4);
+            this.chart2.Size = new System.Drawing.Size(980, 251);
             this.chart2.TabIndex = 3;
             this.chart2.Text = "chart2";
-            title2.Name = "Title1";
-            title2.Text = "Fourier";
-            this.chart2.Titles.Add(title2);
+            title4.Name = "Title1";
+            title4.Text = "Fourier";
+            this.chart2.Titles.Add(title4);
             // 
             // Plot
             // 
@@ -267,7 +274,7 @@ namespace Wavelette_comparison
             this.groupBox1.Controls.Add(this.chart2);
             this.groupBox1.Location = new System.Drawing.Point(218, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1828, 1246);
+            this.groupBox1.Size = new System.Drawing.Size(1794, 1246);
             this.groupBox1.TabIndex = 21;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Plots";
@@ -279,7 +286,7 @@ namespace Wavelette_comparison
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.Location = new System.Drawing.Point(108, 520);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(789, 719);
+            this.pictureBox1.Size = new System.Drawing.Size(755, 719);
             this.pictureBox1.TabIndex = 18;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
@@ -311,6 +318,7 @@ namespace Wavelette_comparison
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Location = new System.Drawing.Point(0, 19);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -456,6 +464,67 @@ namespace Wavelette_comparison
             this.textBox2.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox2_DragDrop_1);
             this.textBox2.DragEnter += new System.Windows.Forms.DragEventHandler(this.textBox1_DragEnter);
             // 
+            // tabPage4
+            // 
+            this.tabPage4.BackColor = System.Drawing.Color.Azure;
+            this.tabPage4.Controls.Add(this.RanSampCount);
+            this.tabPage4.Controls.Add(this.textBox16);
+            this.tabPage4.Controls.Add(this.RanRange2);
+            this.tabPage4.Controls.Add(this.RanRange1);
+            this.tabPage4.Controls.Add(this.textBox13);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(186, 170);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Random";
+            // 
+            // RanSampCount
+            // 
+            this.RanSampCount.Location = new System.Drawing.Point(87, 47);
+            this.RanSampCount.Name = "RanSampCount";
+            this.RanSampCount.Size = new System.Drawing.Size(70, 20);
+            this.RanSampCount.TabIndex = 4;
+            this.RanSampCount.Text = "1000";
+            // 
+            // textBox16
+            // 
+            this.textBox16.BackColor = System.Drawing.Color.Azure;
+            this.textBox16.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox16.Location = new System.Drawing.Point(4, 47);
+            this.textBox16.Name = "textBox16";
+            this.textBox16.Size = new System.Drawing.Size(100, 13);
+            this.textBox16.TabIndex = 3;
+            this.textBox16.Text = "Sample count :";
+            // 
+            // RanRange2
+            // 
+            this.RanRange2.Location = new System.Drawing.Point(125, 10);
+            this.RanRange2.Name = "RanRange2";
+            this.RanRange2.Size = new System.Drawing.Size(32, 20);
+            this.RanRange2.TabIndex = 2;
+            this.RanRange2.Text = "5000";
+            this.RanRange2.TextChanged += new System.EventHandler(this.textBox15_TextChanged);
+            // 
+            // RanRange1
+            // 
+            this.RanRange1.Location = new System.Drawing.Point(87, 10);
+            this.RanRange1.Name = "RanRange1";
+            this.RanRange1.Size = new System.Drawing.Size(32, 20);
+            this.RanRange1.TabIndex = 1;
+            this.RanRange1.Text = "1";
+            this.RanRange1.TextChanged += new System.EventHandler(this.textBox14_TextChanged);
+            // 
+            // textBox13
+            // 
+            this.textBox13.BackColor = System.Drawing.Color.Azure;
+            this.textBox13.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox13.Location = new System.Drawing.Point(4, 13);
+            this.textBox13.Name = "textBox13";
+            this.textBox13.Size = new System.Drawing.Size(100, 13);
+            this.textBox13.TabIndex = 0;
+            this.textBox13.Text = "Random range :";
+            this.textBox13.TextChanged += new System.EventHandler(this.textBox13_TextChanged);
+            // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
@@ -477,7 +546,7 @@ namespace Wavelette_comparison
             this.AutoScrollMargin = new System.Drawing.Size(0, 5);
             this.AutoScrollMinSize = new System.Drawing.Size(0, 5);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1289, 1030);
+            this.ClientSize = new System.Drawing.Size(1306, 1030);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "Form1";
@@ -496,6 +565,8 @@ namespace Wavelette_comparison
             this.tabPage2.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -537,6 +608,12 @@ namespace Wavelette_comparison
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TextBox RanRange2;
+        private System.Windows.Forms.TextBox RanRange1;
+        private System.Windows.Forms.TextBox textBox13;
+        private System.Windows.Forms.TextBox RanSampCount;
+        private System.Windows.Forms.TextBox textBox16;
     }
 }
 
