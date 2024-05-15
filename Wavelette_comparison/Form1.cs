@@ -1,4 +1,5 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.IntegralTransforms;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace Wavelette_comparison
 
         }
         #region Fourier
-        static Complex[] FourierTransform(Vector<double> inputValues)
+        static Complex[] FourierTransform1(Vector<double> inputValues)
         {
             int N = inputValues.Count;
             Complex[] result = new Complex[N];
@@ -58,6 +59,42 @@ namespace Wavelette_comparison
             }
 
             return result;
+        }
+        private Complex[] FourierTransform(Signal f1, Vector<double> signal, double duration)
+        {
+            
+            // Преобразуем сигнал в комплексный массив
+            Complex[] complexSignal = new Complex[signal.Count];
+            for (int i = 0; i < signal.Count; i++)
+            {
+                complexSignal[i] = new Complex(signal[i], 0);
+            }
+
+            // Выполняем преобразование Фурье
+            Fourier.Forward(complexSignal, FourierOptions.Matlab);
+
+            // Рассчитываем частоты для оси X графика
+            double[] frequencyAxis = new double[signal.Count];
+            double sampleRate = signal.Count / duration;
+            for (int i = 0; i < signal.Count; i++)
+            {
+                frequencyAxis[i] = i * sampleRate / signal.Count;
+            }
+
+            // Получаем амплитуды для оси Y графика
+            double[] amplitudeAxis = new double[signal.Count];
+            for (int i = 0; i < signal.Count; i++)
+            {
+                amplitudeAxis[i] = complexSignal[i].Magnitude;
+            }
+            for (int i = 0; i < signal.Count; i++)
+            {
+                f1.freq.Add(frequencyAxis[i]);
+                f1.ampl.Add(amplitudeAxis[i]);
+
+            }
+
+            return (complexSignal);
         }
         #endregion
         #region Drag&Drop
@@ -400,12 +437,12 @@ namespace Wavelette_comparison
             {
                 int N = S1.S.Count;
                 Complex[] result = new Complex[N];
-                result = FourierTransform(S1.S);
+                result = FourierTransform(S1,S1.S,1);
                 chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine;
                 for (int i = 0; i < S1.S.Count; i++)
                 {
-                    chart1.Series[0].Points.AddY(S1.S[i]);
-                    chart2.Series[0].Points.AddY( result[i].Magnitude);
+                    chart1.Series[0].Points.AddXY(1/S1.S.Count*i,S1.S[i]);
+                    chart2.Series[0].Points.AddXY( S1.freq[i],result[i].Magnitude);
 
                 }
                 updS(S1);
@@ -417,15 +454,15 @@ namespace Wavelette_comparison
                     Generate(S1);
                     int N = S1.S.Count;
                     Complex[] result = new Complex[N];
-                    result = FourierTransform(S1.S);
+                    result = FourierTransform(S1, S1.S, 1);
                     chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
                     S1.b = System.Convert.ToDouble(Range1.Text);
                     S1.be = System.Convert.ToDouble(Range2.Text);
                     double step = (Math.Abs((System.Convert.ToDouble(Range2.Text) - System.Convert.ToDouble(Range1.Text)))) / System.Convert.ToDouble(resolution.Text);
                     for (int i = 0; i < S1.S.Count; i++)
                     {
-                        chart1.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step * i, S1.S[i]);
-                        chart2.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step * i, result[i].Magnitude);
+                        chart1.Series[0].Points.AddXY(1 / S1.S.Count * i, S1.S[i]);
+                        chart2.Series[0].Points.AddXY(S1.freq[i], result[i].Magnitude);
 
                     }
                     updS(S1);
@@ -436,7 +473,7 @@ namespace Wavelette_comparison
                     {
                         int N = S1.S.Count;
                         Complex[] result = new Complex[N];
-                        result = FourierTransform(S1.S);
+                        result = FourierTransform(S1, S1.S, 1);
                         chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
                         for (int i = 0; i < S1.S.Count; i++)
                         {
@@ -461,7 +498,7 @@ namespace Wavelette_comparison
                         textBox4.Text = System.Convert.ToString(S1.S.Count);
                         int N = S1.S.Count;
                         Complex[] result = new Complex[N];
-                        result = FourierTransform(S1.S);
+                        result = FourierTransform(S1, S1.S, 1);
                         chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
                         S1.b = System.Convert.ToDouble(Range1.Text);
                         S1.be = System.Convert.ToDouble(Range2.Text);

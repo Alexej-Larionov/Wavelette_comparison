@@ -29,6 +29,8 @@ namespace Wavelette_comparison
         public double x1 = 0;
         public double x2 = 0;
         public int flag = 0;
+        public List<double> freq = new List<double>();
+        public List<double> ampl = new List<double>();
 
 
         public void write(List<double> A)
