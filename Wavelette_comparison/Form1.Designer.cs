@@ -78,6 +78,8 @@ namespace Wavelette_comparison
             this.RanRange1 = new System.Windows.Forms.TextBox();
             this.textBox13 = new System.Windows.Forms.TextBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.textBox14 = new System.Windows.Forms.TextBox();
+            this.textBox15 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -95,9 +97,10 @@ namespace Wavelette_comparison
             this.textBox1.AllowDrop = true;
             this.textBox1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox1.Location = new System.Drawing.Point(6, 6);
+            this.textBox1.Location = new System.Drawing.Point(8, 7);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(174, 20);
+            this.textBox1.Size = new System.Drawing.Size(231, 22);
             this.textBox1.TabIndex = 1;
             this.textBox1.Text = "Insert mp3 file";
             this.textBox1.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox1_DragDrop);
@@ -111,7 +114,8 @@ namespace Wavelette_comparison
             this.chart1.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(28, 263);
+            this.chart1.Location = new System.Drawing.Point(37, 324);
+            this.chart1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chart1.Name = "chart1";
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
@@ -121,7 +125,7 @@ namespace Wavelette_comparison
             series1.Name = "Signal";
             series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(963, 251);
+            this.chart1.Size = new System.Drawing.Size(1263, 309);
             this.chart1.TabIndex = 2;
             this.chart1.Text = "chart1";
             title1.Name = "Title1";
@@ -137,14 +141,15 @@ namespace Wavelette_comparison
             this.chart2.ChartAreas.Add(chartArea2);
             legend2.Name = "Legend1";
             this.chart2.Legends.Add(legend2);
-            this.chart2.Location = new System.Drawing.Point(28, 19);
+            this.chart2.Location = new System.Drawing.Point(37, 23);
+            this.chart2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chart2.Name = "chart2";
             series2.ChartArea = "ChartArea1";
             series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
             series2.Legend = "Legend1";
             series2.Name = "Fourier";
             this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(963, 251);
+            this.chart2.Size = new System.Drawing.Size(1263, 309);
             this.chart2.TabIndex = 3;
             this.chart2.Text = "chart2";
             title2.Name = "Title1";
@@ -153,9 +158,10 @@ namespace Wavelette_comparison
             // 
             // Plot
             // 
-            this.Plot.Location = new System.Drawing.Point(6, 221);
+            this.Plot.Location = new System.Drawing.Point(12, 324);
+            this.Plot.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Plot.Name = "Plot";
-            this.Plot.Size = new System.Drawing.Size(184, 23);
+            this.Plot.Size = new System.Drawing.Size(245, 28);
             this.Plot.TabIndex = 4;
             this.Plot.Text = "Plot";
             this.Plot.UseVisualStyleBackColor = true;
@@ -174,17 +180,19 @@ namespace Wavelette_comparison
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(91, 297);
+            this.textBox3.Location = new System.Drawing.Point(125, 418);
+            this.textBox3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(32, 20);
+            this.textBox3.Size = new System.Drawing.Size(41, 22);
             this.textBox3.TabIndex = 5;
             this.textBox3.Text = "200";
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(148, 297);
+            this.textBox4.Location = new System.Drawing.Point(201, 418);
+            this.textBox4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(39, 20);
+            this.textBox4.Size = new System.Drawing.Size(51, 22);
             this.textBox4.TabIndex = 6;
             this.textBox4.Text = "200";
             // 
@@ -192,26 +200,29 @@ namespace Wavelette_comparison
             // 
             this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox5.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.textBox5.Location = new System.Drawing.Point(8, 297);
+            this.textBox5.Location = new System.Drawing.Point(15, 418);
+            this.textBox5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(77, 13);
+            this.textBox5.Size = new System.Drawing.Size(103, 15);
             this.textBox5.TabIndex = 7;
             this.textBox5.Text = "Resolution a*b:";
             // 
             // textBox9
             // 
-            this.textBox9.Location = new System.Drawing.Point(148, 326);
+            this.textBox9.Location = new System.Drawing.Point(201, 453);
+            this.textBox9.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(39, 20);
+            this.textBox9.Size = new System.Drawing.Size(51, 22);
             this.textBox9.TabIndex = 13;
             this.textBox9.Text = "1";
             this.textBox9.TextChanged += new System.EventHandler(this.textBox9_TextChanged);
             // 
             // textBox10
             // 
-            this.textBox10.Location = new System.Drawing.Point(90, 326);
+            this.textBox10.Location = new System.Drawing.Point(124, 453);
+            this.textBox10.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(33, 20);
+            this.textBox10.Size = new System.Drawing.Size(43, 22);
             this.textBox10.TabIndex = 12;
             this.textBox10.Text = "0,01";
             // 
@@ -219,18 +230,20 @@ namespace Wavelette_comparison
             // 
             this.textBox11.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox11.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.textBox11.Location = new System.Drawing.Point(8, 326);
+            this.textBox11.Location = new System.Drawing.Point(15, 453);
+            this.textBox11.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox11.Name = "textBox11";
-            this.textBox11.Size = new System.Drawing.Size(77, 13);
+            this.textBox11.Size = new System.Drawing.Size(103, 15);
             this.textBox11.TabIndex = 11;
             this.textBox11.Text = "Range a:";
             // 
             // button2
             // 
             this.button2.BackColor = System.Drawing.Color.White;
-            this.button2.Location = new System.Drawing.Point(7, 400);
+            this.button2.Location = new System.Drawing.Point(13, 544);
+            this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(180, 31);
+            this.button2.Size = new System.Drawing.Size(240, 38);
             this.button2.TabIndex = 14;
             this.button2.Text = "Build spectrogramm";
             this.button2.UseVisualStyleBackColor = false;
@@ -243,9 +256,10 @@ namespace Wavelette_comparison
             // progressBar1
             // 
             this.progressBar1.ForeColor = System.Drawing.Color.OrangeRed;
-            this.progressBar1.Location = new System.Drawing.Point(8, 474);
+            this.progressBar1.Location = new System.Drawing.Point(15, 635);
+            this.progressBar1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(179, 23);
+            this.progressBar1.Size = new System.Drawing.Size(239, 28);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar1.TabIndex = 16;
             // 
@@ -258,9 +272,10 @@ namespace Wavelette_comparison
             // 
             this.textBox6.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox6.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.textBox6.Location = new System.Drawing.Point(6, 533);
+            this.textBox6.Location = new System.Drawing.Point(12, 708);
+            this.textBox6.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(181, 13);
+            this.textBox6.Size = new System.Drawing.Size(241, 15);
             this.textBox6.TabIndex = 20;
             this.textBox6.Text = "Time elapsed:";
             // 
@@ -272,9 +287,11 @@ namespace Wavelette_comparison
             this.groupBox1.Controls.Add(this.chart1);
             this.groupBox1.Controls.Add(this.pictureBox1);
             this.groupBox1.Controls.Add(this.chart2);
-            this.groupBox1.Location = new System.Drawing.Point(218, 12);
+            this.groupBox1.Location = new System.Drawing.Point(291, 15);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1777, 1246);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Size = new System.Drawing.Size(2348, 1534);
             this.groupBox1.TabIndex = 21;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Plots";
@@ -284,9 +301,10 @@ namespace Wavelette_comparison
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Location = new System.Drawing.Point(108, 520);
+            this.pictureBox1.Location = new System.Drawing.Point(144, 640);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(738, 719);
+            this.pictureBox1.Size = new System.Drawing.Size(963, 885);
             this.pictureBox1.TabIndex = 18;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
@@ -294,6 +312,8 @@ namespace Wavelette_comparison
             // groupBox2
             // 
             this.groupBox2.BackColor = System.Drawing.Color.Azure;
+            this.groupBox2.Controls.Add(this.textBox15);
+            this.groupBox2.Controls.Add(this.textBox14);
             this.groupBox2.Controls.Add(this.tabControl1);
             this.groupBox2.Controls.Add(this.comboBox1);
             this.groupBox2.Controls.Add(this.textBox6);
@@ -306,9 +326,11 @@ namespace Wavelette_comparison
             this.groupBox2.Controls.Add(this.button2);
             this.groupBox2.Controls.Add(this.textBox10);
             this.groupBox2.Controls.Add(this.textBox9);
-            this.groupBox2.Location = new System.Drawing.Point(12, 12);
+            this.groupBox2.Location = new System.Drawing.Point(16, 15);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(200, 559);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Size = new System.Drawing.Size(267, 754);
             this.groupBox2.TabIndex = 22;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Settings";
@@ -319,10 +341,11 @@ namespace Wavelette_comparison
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Location = new System.Drawing.Point(0, 19);
+            this.tabControl1.Location = new System.Drawing.Point(0, 23);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(194, 196);
+            this.tabControl1.Size = new System.Drawing.Size(259, 241);
             this.tabControl1.TabIndex = 24;
             // 
             // tabPage1
@@ -331,10 +354,11 @@ namespace Wavelette_comparison
             this.tabPage1.Controls.Add(this.textBox1);
             this.tabPage1.Controls.Add(this.richTextBox2);
             this.tabPage1.Controls.Add(this.richTextBox1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(186, 170);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage1.Size = new System.Drawing.Size(251, 212);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "MP3\'s";
             // 
@@ -343,9 +367,10 @@ namespace Wavelette_comparison
             this.richTextBox2.BackColor = System.Drawing.Color.Azure;
             this.richTextBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBox2.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.richTextBox2.Location = new System.Drawing.Point(3, 104);
+            this.richTextBox2.Location = new System.Drawing.Point(4, 128);
+            this.richTextBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(146, 60);
+            this.richTextBox2.Size = new System.Drawing.Size(195, 74);
             this.richTextBox2.TabIndex = 22;
             this.richTextBox2.Text = "";
             // 
@@ -354,9 +379,10 @@ namespace Wavelette_comparison
             this.richTextBox1.BackColor = System.Drawing.Color.Azure;
             this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBox1.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.richTextBox1.Location = new System.Drawing.Point(6, 29);
+            this.richTextBox1.Location = new System.Drawing.Point(8, 36);
+            this.richTextBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(143, 43);
+            this.richTextBox1.Size = new System.Drawing.Size(191, 53);
             this.richTextBox1.TabIndex = 21;
             this.richTextBox1.Text = "";
             this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
@@ -371,10 +397,11 @@ namespace Wavelette_comparison
             this.tabPage2.Controls.Add(this.resolution);
             this.tabPage2.Controls.Add(this.Range1);
             this.tabPage2.Controls.Add(this.Range2);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(186, 170);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage2.Size = new System.Drawing.Size(251, 212);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Function";
             // 
@@ -382,9 +409,10 @@ namespace Wavelette_comparison
             // 
             this.textBox12.BackColor = System.Drawing.Color.Azure;
             this.textBox12.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox12.Location = new System.Drawing.Point(7, 125);
+            this.textBox12.Location = new System.Drawing.Point(9, 154);
+            this.textBox12.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox12.Name = "textBox12";
-            this.textBox12.Size = new System.Drawing.Size(173, 13);
+            this.textBox12.Size = new System.Drawing.Size(231, 15);
             this.textBox12.TabIndex = 6;
             this.textBox12.Text = "Resolution:";
             // 
@@ -392,9 +420,10 @@ namespace Wavelette_comparison
             // 
             this.textBox8.BackColor = System.Drawing.Color.Azure;
             this.textBox8.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox8.Location = new System.Drawing.Point(7, 75);
+            this.textBox8.Location = new System.Drawing.Point(9, 92);
+            this.textBox8.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(173, 13);
+            this.textBox8.Size = new System.Drawing.Size(231, 15);
             this.textBox8.TabIndex = 5;
             this.textBox8.Text = "Range:";
             // 
@@ -402,42 +431,47 @@ namespace Wavelette_comparison
             // 
             this.textBox7.BackColor = System.Drawing.Color.Azure;
             this.textBox7.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox7.Location = new System.Drawing.Point(7, 21);
+            this.textBox7.Location = new System.Drawing.Point(9, 26);
+            this.textBox7.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(173, 13);
+            this.textBox7.Size = new System.Drawing.Size(231, 15);
             this.textBox7.TabIndex = 4;
             this.textBox7.Text = "Function to analyze:";
             // 
             // input
             // 
-            this.input.Location = new System.Drawing.Point(6, 40);
+            this.input.Location = new System.Drawing.Point(8, 49);
+            this.input.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.input.Name = "input";
-            this.input.Size = new System.Drawing.Size(173, 20);
+            this.input.Size = new System.Drawing.Size(229, 22);
             this.input.TabIndex = 3;
             this.input.Text = "sin(x^2)";
             // 
             // resolution
             // 
-            this.resolution.Location = new System.Drawing.Point(7, 144);
+            this.resolution.Location = new System.Drawing.Point(9, 177);
+            this.resolution.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.resolution.Name = "resolution";
-            this.resolution.Size = new System.Drawing.Size(74, 20);
+            this.resolution.Size = new System.Drawing.Size(97, 22);
             this.resolution.TabIndex = 2;
             this.resolution.Text = "100";
             // 
             // Range1
             // 
-            this.Range1.Location = new System.Drawing.Point(7, 94);
+            this.Range1.Location = new System.Drawing.Point(9, 116);
+            this.Range1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Range1.Name = "Range1";
-            this.Range1.Size = new System.Drawing.Size(74, 20);
+            this.Range1.Size = new System.Drawing.Size(97, 22);
             this.Range1.TabIndex = 1;
             this.Range1.Text = "0";
             this.Range1.TextChanged += new System.EventHandler(this.Range1_TextChanged);
             // 
             // Range2
             // 
-            this.Range2.Location = new System.Drawing.Point(106, 94);
+            this.Range2.Location = new System.Drawing.Point(141, 116);
+            this.Range2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Range2.Name = "Range2";
-            this.Range2.Size = new System.Drawing.Size(74, 20);
+            this.Range2.Size = new System.Drawing.Size(97, 22);
             this.Range2.TabIndex = 0;
             this.Range2.Text = "10";
             this.Range2.TextChanged += new System.EventHandler(this.Range2_TextChanged);
@@ -446,9 +480,10 @@ namespace Wavelette_comparison
             // 
             this.tabPage3.BackColor = System.Drawing.Color.Azure;
             this.tabPage3.Controls.Add(this.textBox2);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Location = new System.Drawing.Point(4, 25);
+            this.tabPage3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(186, 170);
+            this.tabPage3.Size = new System.Drawing.Size(251, 212);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Bearings";
             // 
@@ -456,9 +491,10 @@ namespace Wavelette_comparison
             // 
             this.textBox2.AllowDrop = true;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox2.Location = new System.Drawing.Point(4, 13);
+            this.textBox2.Location = new System.Drawing.Point(5, 16);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(158, 20);
+            this.textBox2.Size = new System.Drawing.Size(210, 22);
             this.textBox2.TabIndex = 0;
             this.textBox2.Text = "Insert CSV path";
             this.textBox2.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBox2_DragDrop_1);
@@ -472,17 +508,19 @@ namespace Wavelette_comparison
             this.tabPage4.Controls.Add(this.RanRange2);
             this.tabPage4.Controls.Add(this.RanRange1);
             this.tabPage4.Controls.Add(this.textBox13);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Location = new System.Drawing.Point(4, 25);
+            this.tabPage4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(186, 170);
+            this.tabPage4.Size = new System.Drawing.Size(251, 212);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Random";
             // 
             // RanSampCount
             // 
-            this.RanSampCount.Location = new System.Drawing.Point(87, 47);
+            this.RanSampCount.Location = new System.Drawing.Point(116, 58);
+            this.RanSampCount.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.RanSampCount.Name = "RanSampCount";
-            this.RanSampCount.Size = new System.Drawing.Size(70, 20);
+            this.RanSampCount.Size = new System.Drawing.Size(92, 22);
             this.RanSampCount.TabIndex = 4;
             this.RanSampCount.Text = "1000";
             // 
@@ -490,26 +528,29 @@ namespace Wavelette_comparison
             // 
             this.textBox16.BackColor = System.Drawing.Color.Azure;
             this.textBox16.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox16.Location = new System.Drawing.Point(4, 47);
+            this.textBox16.Location = new System.Drawing.Point(5, 58);
+            this.textBox16.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox16.Name = "textBox16";
-            this.textBox16.Size = new System.Drawing.Size(100, 13);
+            this.textBox16.Size = new System.Drawing.Size(133, 15);
             this.textBox16.TabIndex = 3;
             this.textBox16.Text = "Sample count :";
             // 
             // RanRange2
             // 
-            this.RanRange2.Location = new System.Drawing.Point(125, 10);
+            this.RanRange2.Location = new System.Drawing.Point(167, 12);
+            this.RanRange2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.RanRange2.Name = "RanRange2";
-            this.RanRange2.Size = new System.Drawing.Size(32, 20);
+            this.RanRange2.Size = new System.Drawing.Size(41, 22);
             this.RanRange2.TabIndex = 2;
             this.RanRange2.Text = "5000";
             this.RanRange2.TextChanged += new System.EventHandler(this.textBox15_TextChanged);
             // 
             // RanRange1
             // 
-            this.RanRange1.Location = new System.Drawing.Point(87, 10);
+            this.RanRange1.Location = new System.Drawing.Point(116, 12);
+            this.RanRange1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.RanRange1.Name = "RanRange1";
-            this.RanRange1.Size = new System.Drawing.Size(32, 20);
+            this.RanRange1.Size = new System.Drawing.Size(41, 22);
             this.RanRange1.TabIndex = 1;
             this.RanRange1.Text = "1";
             this.RanRange1.TextChanged += new System.EventHandler(this.textBox14_TextChanged);
@@ -518,9 +559,10 @@ namespace Wavelette_comparison
             // 
             this.textBox13.BackColor = System.Drawing.Color.Azure;
             this.textBox13.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox13.Location = new System.Drawing.Point(4, 13);
+            this.textBox13.Location = new System.Drawing.Point(5, 16);
+            this.textBox13.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBox13.Name = "textBox13";
-            this.textBox13.Size = new System.Drawing.Size(100, 13);
+            this.textBox13.Size = new System.Drawing.Size(133, 15);
             this.textBox13.TabIndex = 0;
             this.textBox13.Text = "Random range :";
             this.textBox13.TextChanged += new System.EventHandler(this.textBox13_TextChanged);
@@ -532,23 +574,43 @@ namespace Wavelette_comparison
             "Sequential computing",
             "Parallel Computing",
             "Optimized parallel computing"});
-            this.comboBox1.Location = new System.Drawing.Point(7, 263);
+            this.comboBox1.Location = new System.Drawing.Point(13, 376);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(180, 21);
+            this.comboBox1.Size = new System.Drawing.Size(239, 24);
             this.comboBox1.TabIndex = 23;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
+            // textBox14
+            // 
+            this.textBox14.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox14.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.textBox14.Location = new System.Drawing.Point(12, 279);
+            this.textBox14.Name = "textBox14";
+            this.textBox14.Size = new System.Drawing.Size(151, 15);
+            this.textBox14.TabIndex = 25;
+            this.textBox14.Text = "Time (seconds)";
+            // 
+            // textBox15
+            // 
+            this.textBox15.Location = new System.Drawing.Point(187, 276);
+            this.textBox15.Name = "textBox15";
+            this.textBox15.Size = new System.Drawing.Size(66, 22);
+            this.textBox15.TabIndex = 26;
+            this.textBox15.Text = "2";
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoScrollMargin = new System.Drawing.Size(0, 5);
             this.AutoScrollMinSize = new System.Drawing.Size(0, 5);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1323, 1030);
+            this.ClientSize = new System.Drawing.Size(1764, 1055);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -614,6 +676,8 @@ namespace Wavelette_comparison
         private System.Windows.Forms.TextBox textBox13;
         private System.Windows.Forms.TextBox RanSampCount;
         private System.Windows.Forms.TextBox textBox16;
+        private System.Windows.Forms.TextBox textBox15;
+        private System.Windows.Forms.TextBox textBox14;
     }
 }
 

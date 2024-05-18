@@ -432,12 +432,12 @@ namespace Wavelette_comparison
         {
             try { chart1.Series[0].Points.Clear(); chart2.Series[0].Points.Clear(); }
             catch { }
-            
+            double time = System.Convert.ToDouble(textBox15.Text);
             if (tabControl1.SelectedTab == tabPage1)
             {
                 int N = S1.S.Count;
                 Complex[] result = new Complex[N];
-                result = FourierTransform(S1,S1.S,1);
+                result = FourierTransform(S1,S1.S,time);
                 chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine;
                 for (int i = 0; i < S1.S.Count; i++)
                 {
@@ -445,6 +445,8 @@ namespace Wavelette_comparison
                     chart2.Series[0].Points.AddXY( S1.freq[i],result[i].Magnitude);
 
                 }
+                S1.freq.Clear();
+
                 updS(S1);
             }
             else 
@@ -454,17 +456,23 @@ namespace Wavelette_comparison
                     Generate(S1);
                     int N = S1.S.Count;
                     Complex[] result = new Complex[N];
-                    result = FourierTransform(S1, S1.S, 1);
+                    result = FourierTransform(S1, S1.S, time);
                     chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
                     S1.b = System.Convert.ToDouble(Range1.Text);
                     S1.be = System.Convert.ToDouble(Range2.Text);
+                    double step1 = time / S1.S.Count;
                     double step = (Math.Abs((System.Convert.ToDouble(Range2.Text) - System.Convert.ToDouble(Range1.Text)))) / System.Convert.ToDouble(resolution.Text);
                     for (int i = 0; i < S1.S.Count; i++)
                     {
-                        chart1.Series[0].Points.AddXY(1 / S1.S.Count * i, S1.S[i]);
+                        chart1.Series[0].Points.AddXY(i*step1, S1.S[i]);
                         chart2.Series[0].Points.AddXY(S1.freq[i], result[i].Magnitude);
+                        chart2.ChartAreas[0].AxisX.Title = "Herz";
+                        chart2.ChartAreas[0].AxisY.Title = "Amplitude";
+                        chart1.ChartAreas[0].AxisX.Title = "Time (seconds)";
+                        chart1.ChartAreas[0].AxisY.Title = "Amplitude";
 
                     }
+                    S1.freq.Clear();
                     updS(S1);
                 }
                 else 
@@ -473,7 +481,7 @@ namespace Wavelette_comparison
                     {
                         int N = S1.S.Count;
                         Complex[] result = new Complex[N];
-                        result = FourierTransform(S1, S1.S, 1);
+                        result = FourierTransform(S1, S1.S, time);
                         chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
                         for (int i = 0; i < S1.S.Count; i++)
                         {
@@ -481,6 +489,8 @@ namespace Wavelette_comparison
                             chart2.Series[0].Points.AddXY(i, result[i].Magnitude);
 
                         }
+                        S1.freq.Clear();
+
                         updS(S1);
                     }
                     else
@@ -509,6 +519,8 @@ namespace Wavelette_comparison
                             chart2.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step * i, result[i].Magnitude);
 
                         }
+                        S1.freq.Clear();
+
                         updS(S1);
                     }
                 }
