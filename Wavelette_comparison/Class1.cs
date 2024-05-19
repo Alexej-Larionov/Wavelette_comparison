@@ -20,7 +20,7 @@ namespace Wavelette_comparison
         public Vector<double> S;
         public int reza=0;
         public int rezb=0;
-        Matrix<double> m;
+        public Matrix<double> m;
         public double a=0;
         public double ae=0;
         public double b=0;
