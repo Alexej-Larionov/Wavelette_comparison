@@ -3,16 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace Wavelette_comparison
 {
+    public static class ColorUtils
+    {
+        public static Color ToMediaColor(this byte[] rgb)
+        {
+            return Color.FromArgb(rgb[0], rgb[1], rgb[2]);
+        }
+    }
     class Signal
     {
         public Vector<double> S;
         public int reza=0;
         public int rezb=0;
-        Matrix<double> m;
+        public Matrix<double> m;
         public double a=0;
         public double ae=0;
         public double b=0;
@@ -21,6 +29,8 @@ namespace Wavelette_comparison
         public double x1 = 0;
         public double x2 = 0;
         public int flag = 0;
+        public List<double> freq = new List<double>();
+        public List<double> ampl = new List<double>();
 
 
         public void write(List<double> A)

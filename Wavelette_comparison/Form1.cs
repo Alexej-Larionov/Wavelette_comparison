@@ -1,4 +1,5 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.IntegralTransforms;
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -14,7 +15,9 @@ using System.Windows.Forms;
 using OfficeOpenXml;
 using NAudio.Wave;
 using System.Diagnostics;
-
+using System.Numerics;
+using System.Globalization;
+using SciColorMaps.Portable;
 
 
 namespace Wavelette_comparison
@@ -22,12 +25,10 @@ namespace Wavelette_comparison
     public partial class Form1 : Form
     {
         Signal S1 = new Signal();
-        Signal S2 = new Signal();
+        //List<Signal> Sv = new List<Signal>();
         private Point mouseDownPoint;
         private bool isDragging = false;
         private float zoomFactor = 1.0f;
-        private Image originalImage;
-
         public Form1()
         {
             InitializeComponent();
@@ -37,7 +38,73 @@ namespace Wavelette_comparison
         {
 
         }
+        #region Fourier
+        static Complex[] FourierTransform1(Vector<double> inputValues)
+        {
+            int N = inputValues.Count;
+            Complex[] result = new Complex[N];
 
+            for (int k = 0; k < N; k++)
+            {
+                Complex sum = Complex.Zero;
+                for (int n = 0; n < N; n++)
+                {
+                    double angle = 2 * Math.PI * k * n / N;
+                    Complex twiddleFactor = Complex.Exp(new Complex(0, -angle));
+                    sum += inputValues[n] * twiddleFactor;
+                }
+                result[k] = sum;
+            }
+
+            return result;
+        }
+        private Complex[] FourierTransform(Signal f1, Vector<double> signal, double duration)
+        {
+            
+            // Преобразуем сигнал в комплексный массив
+            Complex[] complexSignal = new Complex[signal.Count];
+            float[] signalR = new float[signal.Count+2];
+            double[] freq = new double[signal.Count*2];
+            for (int i = 0; i < signal.Count; i++)
+            {
+                complexSignal[i] = new Complex(signal[i], 0);
+                signalR[i] =Convert.ToSingle(f1.S[i]);
+            }
+
+            // Выполняем преобразование Фурье
+            Fourier.Forward(complexSignal, FourierOptions.Matlab);
+            Fourier.ForwardReal(signalR, signalR.Count()-2, FourierOptions.Matlab);
+            // Рассчитываем частоты для оси X графика
+            double[] frequencyAxis = new double[signal.Count];
+            double sampleRate = signal.Count / duration;
+            for (int i = 0; i < signal.Count; i++)
+            {
+                frequencyAxis[i] = i * sampleRate / signal.Count;
+            }
+
+            // Получаем амплитуды для оси Y графика
+            double[] amplitudeAxis = new double[signal.Count];
+            for (int i = 0; i < signal.Count; i++)
+            {
+                amplitudeAxis[i] = complexSignal[i].Magnitude;
+            }
+            freq=Fourier.FrequencyScale(signal.Count()*2,sampleRate*2);
+                     
+            for (int i = 0; i < signal.Count; i++)
+            {
+                
+                f1.freq.Add(freq[i]);
+                f1.ampl.Add(amplitudeAxis[i]);
+
+            }
+            for (int i = 0; i < signal.Count; i++)
+            {
+                complexSignal[i] = new Complex(signalR[i], 0);
+                
+            }
+            return (complexSignal);
+        }
+        #endregion
         #region Drag&Drop
         private void textBox1_DragDrop(object sender, DragEventArgs e)
         {
@@ -47,26 +114,12 @@ namespace Wavelette_comparison
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 int i = 0;
                 // Check if the file is a .txt file
-                if (files.Length > 0 && Path.GetExtension(files[0]).Equals(".txt", StringComparison.OrdinalIgnoreCase))
-                {
-                    // If it's a .txt file, proceed with your original logic
                     while (i < files.Length)
                     {
                         richTextBox1.Text = files[i];
                         i++;
                     }
-                    ProcessTextFile(files[0], S1);
-                }
-                else
-                {
-                    while (i < files.Length)
-                    {
-                        richTextBox1.Text = files[i];
-                        i++;
-                    }
-                    ProcessMP3(files[0], S1);
-
-                }
+                    ProcessMP3(files[0], S1);                
             }
         }
         private void textBox1_DragEnter(object sender, DragEventArgs e)
@@ -76,33 +129,8 @@ namespace Wavelette_comparison
         }
         private void textBox2_DragDrop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                // Get the dropped files
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                int i = 0;
-                // Check if the file is a .txt file
-                if (files.Length > 0 && Path.GetExtension(files[0]).Equals(".txt", StringComparison.OrdinalIgnoreCase))
-                {
-                    // If it's a .txt file, proceed with your original logic
-                    while (i < files.Length)
-                    {
-                        richTextBox2.Text = files[i];
-                        i++;
-                    }
-                    ProcessTextFile(files[0], S2);
-                }
-                else
-                {
-                    while (i < files.Length)
-                    {
-                        richTextBox2.Text = files[i];
-                        i++;
-                    }
-                    ProcessMP3(files[0], S2);
+           
 
-                }
-            }
         }
         private void textBox2_DragEnter(object sender, DragEventArgs e)
         {
@@ -157,7 +185,7 @@ namespace Wavelette_comparison
                         Signal.Add(sampleValue);
 
                     }
-                    Signal = NormalizeList(Signal);
+                    //Signal = NormalizeList(Signal);
                     S.write(Signal);
                     S.be = Signal.Count();
                     S.b = 0;
@@ -166,7 +194,85 @@ namespace Wavelette_comparison
             }
         }
         #endregion
+        #region CSV process
+        private void textBox2_DragDrop_1(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                // Get the dropped files
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                int i = 0;
+                // Check if the file is a .txt file
+                while (i < files.Length)
+                {
+                    richTextBox2.Text = files[i];
+                    i++;
+                }
+                ReadCSV(files[0],S1);
+            }
+        }
+        private void ReadCSV(string folderPath, Signal S)
+        {
+            var count = new DirectoryInfo(folderPath).GetFiles().Length.ToString();
+            int Text = System.Convert.ToInt32(count);
+            // Предполагаем, что в папке только один CSV файл.
+            if (Text!=1) 
+            {
+                Signal[] Sv = new Signal[Text];
+                for (int i = 0; i < Text; i++)
+                {
+                    var filePath = Directory.GetFiles(folderPath, "*.csv")[i];
+                    var lines = File.ReadAllLines(filePath);
+
+                    // Создаем массив для хранения значений второго столбца.
+                    List<double> secondColumnValues = new List<double>();// Исключаем строку заголовков
+                    for (int j = 1; j < lines.Length; j++)
+                    {
+                        var columns = lines[j].Split(',');
+                        if (columns.Length > 1 && float.TryParse(columns[4], NumberStyles.Any, CultureInfo.InvariantCulture, out float value))
+                        {
+                            secondColumnValues.Add(value);
+                        }
+                    }
+                    Sv[i] = new Signal();
+                    Sv[i].write(secondColumnValues);
+                    Sv[i].be = secondColumnValues.Count();
+                    Sv[i].b = 0;
+                    
+                }
+                for (int i=0; i <Text;i++)
+                {
+                    updS(Sv[i]);
+                    TransformSeq(Sv[i], Sv[i].a, Sv[i].b, Sv[i].S.Count());
+                    draw_cor(true, $"C:/Users/posei/source/repos/Wavelette_comparison/Wavelette_comparison/bin/Debug/Array/output_imageA{i}.png");
+                    Console.WriteLine($"{i}");
+                }
+                //"C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\Array"
+            }
+            else 
+            {
+                var filePath = Directory.GetFiles(folderPath, "*.csv")[0];
+                var lines = File.ReadAllLines(filePath);
+
+                // Создаем массив для хранения значений второго столбца.
+                List<double> secondColumnValues = new List<double>();// Исключаем строку заголовков
+                for (int i = 1; i < lines.Length; i++)
+                {
+                    var columns = lines[i].Split(',');
+                    if (columns.Length > 1 && float.TryParse(columns[4], NumberStyles.Any, CultureInfo.InvariantCulture, out float value))
+                    {
+                        secondColumnValues.Add(value);
+                    }
+                }
+                S.write(secondColumnValues);
+                S.be = secondColumnValues.Count();
+                S.b = 0;
+            }
+            
+        }
+        #endregion
         #region Wavelette functionsParallel
+
         Vector<double> HaarFun(double a, double b, double length, double step)
         {
 
@@ -234,50 +340,24 @@ namespace Wavelette_comparison
                     matrix[i, j] = value;
 
                 }
-                if (Thread.CurrentThread.Name == "name1")
-                {
-                    this.Invoke((Action)(() =>
-                    {
-                        progressBar1.Value = i;
-                    }));
-                }
-                else
-                {
-                    this.Invoke((Action)(() =>
-                    {
-                        progressBar2.Value = i;
-                    }));
 
-                }
+                this.Invoke((Action)(() =>
+                {
+                    progressBar1.Value = i;
+                }));
 
             }
 
 
             S.write(matrix);
 
-            if (Thread.CurrentThread.Name == "name1")
-            {
+           
                 stopwatch1.Stop();
-            }
-            else
-            {
-                stopwatch2.Stop();
-            }
-            if ((progressBar1.Value == progressBar1.Maximum) && (progressBar2.Value == progressBar2.Maximum))
-            {
-                this.Invoke((Action)(() =>
-                {
-                    textBox6.Text = " Time elapsed:" + System.Convert.ToString(Math.Max(stopwatch1.ElapsedMilliseconds, stopwatch2.ElapsedMilliseconds)) + " Miliseconds";
-                    MessageBox.Show("Task complete " + " Time elapsed:" + System.Convert.ToString(Math.Max(stopwatch1.ElapsedMilliseconds, stopwatch2.ElapsedMilliseconds)) + " Miliseconds");
-                    progressBar1.Value = 0;
-                    progressBar2.Value = 0;
-                }));
-            }
-            this.Invoke((Action)(() => { textBox6.Text = " Time elapsed:" + System.Convert.ToString(Math.Max(stopwatch1.ElapsedMilliseconds, stopwatch2.ElapsedMilliseconds)) + " Miliseconds"; }));
-            stopwatch1.Reset();
-            stopwatch2.Reset();
+            
+            
 
         }
+        
         #endregion
         #region WaveFuncSequential
         Vector<double> MhatSeq(double a, double b, double length, Signal S)
@@ -293,13 +373,13 @@ namespace Wavelette_comparison
                 T = (t - b) / a;
                 values[System.Convert.ToInt32(i)] = (1 - Math.Pow(T, 2)) * Math.Exp(-1 * Math.Pow(T, 2) / 2);
             }
+            
             return (values);
 
         }
         void TransformSeq(Signal S, double a, double b, double length)
         {
             Stopwatch stopwatch1 = new Stopwatch();
-            Stopwatch stopwatch2 = new Stopwatch();
 
             double Bstep, Astep, A, B;
             Bstep = (S.be - S.b) / System.Convert.ToDouble(S.rezb);
@@ -310,7 +390,6 @@ namespace Wavelette_comparison
             Matrix<double> matrix = Matrix<double>.Build.Dense(S.reza, S.rezb);
 
             stopwatch1.Start();
-            stopwatch2.Start();
             for (int i = 0; i < S.reza; i++)
             {
 
@@ -322,60 +401,38 @@ namespace Wavelette_comparison
                     matrix[i, j] = value;
 
                 }
-                if (Thread.CurrentThread.Name == "name1")
+                /*
+                this.Invoke((Action)(() =>
                 {
-                    this.Invoke((Action)(() =>
-                    {
-                        progressBar1.Value = i;
-                    }));
-                }
-                else
-                {
-                    this.Invoke((Action)(() =>
-                    {
-                        progressBar2.Value = i;
-                    }));
-
-                }
+                    progressBar1.Value = i;
+                }));*/
 
             }
 
             S.write(matrix);
-
-            if (Thread.CurrentThread.Name == "name1")
+            try
             {
-                stopwatch1.Stop();
+                pictureBox1.Image.Dispose();
             }
-            else
+            catch (Exception ex)
             {
-                stopwatch2.Stop();
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
-            if ((progressBar1.Value == progressBar1.Maximum) && (progressBar2.Value == progressBar2.Maximum))
-            {
-                this.Invoke((Action)(() =>
-                {
-                    textBox6.Text = " Time elapsed:" + System.Convert.ToString(Math.Max(stopwatch1.ElapsedMilliseconds, stopwatch2.ElapsedMilliseconds)) + " Miliseconds";
-                    MessageBox.Show("Task complete " + " Time elapsed:" + System.Convert.ToString(Math.Max(stopwatch1.ElapsedMilliseconds, stopwatch2.ElapsedMilliseconds)) + " Miliseconds");
-                    progressBar1.Value = 0;
-                    progressBar2.Value = 0;
-                }));
-            }
-            stopwatch1.Reset();
-            stopwatch2.Reset();
-
+            
+            GenerateAndSaveImage(S.readM(), "output_imageA.png");
+            pictureBox1.Image = Image.FromFile("output_imageA.png"); pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            ExportMatrixToFile(S.readM(), "output1.txt");
+            stopwatch1.Stop();        
+            stopwatch1.Reset();           
         }
         #endregion
-        #region WaveFunc Parallel Optimised
-
-        #endregion
         #region PLOT
-        private void PlotVector(Signal s1, Signal s2)
+        private void PlotVector(Signal s1)
         {
             // Set up the Chart control
             if (S1.flag == 1) { chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline; }
             else { chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine; }
-            if (S2.flag == 1) { chart2.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline; }
-            else { chart2.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine; }
+            
             chart1.Series[0].Points.Clear();
 
             // Add data points to the series
@@ -383,16 +440,7 @@ namespace Wavelette_comparison
             {
                 chart1.Series[0].Points.AddY(S1.S[i]);
             }
-            // Set up the Chart control
-
-
-            chart2.Series[0].Points.Clear();
-
-            // Add data points to the series
-            for (int i = 0; i < S2.S.Count; i++)
-            {
-                chart2.Series[0].Points.AddY(S2.S[i]);
-            }
+            // Set up the Chart contro
 
 
         }
@@ -401,59 +449,110 @@ namespace Wavelette_comparison
 
         private void button1_Click(object sender, EventArgs e)
         {
-            try { chart1.Series[0].Points.Clear(); }
+            try { chart1.Series[0].Points.Clear(); chart2.Series[0].Points.Clear(); }
             catch { }
+            double time = System.Convert.ToDouble(textBox15.Text);
             if (tabControl1.SelectedTab == tabPage1)
             {
+                int N = S1.S.Count;
+                Complex[] result = new Complex[N];
+                result = FourierTransform(S1,S1.S,time);
                 chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine;
                 for (int i = 0; i < S1.S.Count; i++)
                 {
-                    chart1.Series[0].Points.AddY(S1.S[i]);
+                    chart1.Series[0].Points.AddXY(1/S1.S.Count*i,S1.S[i]);
+                    chart2.Series[0].Points.AddXY( S1.freq[i],result[i].Magnitude);
+
                 }
+                S1.freq.Clear();
+
                 updS(S1);
             }
             else 
             {
-                Generate(S1);
-                chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-                S1.b = System.Convert.ToDouble(Range1.Text);
-                S1.be = System.Convert.ToDouble(Range2.Text);
-               // double asd = (Math.Abs((System.Convert.ToDouble(Range2.Text) - System.Convert.ToDouble(Range1.Text))));
-                double step = (Math.Abs((System.Convert.ToDouble(Range2.Text) - System.Convert.ToDouble(Range1.Text)))) / System.Convert.ToDouble(resolution.Text);
-                for (int i = 0; i < S1.S.Count; i++)
+                if (tabControl1.SelectedTab == tabPage2) 
                 {
-                    chart1.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step*i,S1.S[i]);
+                    Generate(S1);
+                    int N = S1.S.Count;
+                    Complex[] result = new Complex[N];
+                    result = FourierTransform(S1, S1.S, time);
+                    chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+                    S1.b = System.Convert.ToDouble(Range1.Text);
+                    S1.be = System.Convert.ToDouble(Range2.Text);
+                    double step1 = time / S1.S.Count;
+                    for (int i = 0; i < S1.S.Count; i++)
+                    {
+                        chart1.Series[0].Points.AddXY(i*step1, S1.S[i]);
+                        chart2.Series[0].Points.AddXY(S1.freq[i], result[i].Magnitude);
+                        chart2.ChartAreas[0].AxisX.Title = "Herz";
+                        chart2.ChartAreas[0].AxisY.Title = "Amplitude";
+                        chart1.ChartAreas[0].AxisX.Title = "Time (seconds)";
+                        chart1.ChartAreas[0].AxisY.Title = "Amplitude";
+
+                    }
+                    S1.freq.Clear();
+                    updS(S1);
                 }
-                updS(S1);
+                else 
+                {
+                    if (tabControl1.SelectedTab == tabPage3)
+                    {
+                        int N = S1.S.Count;
+                        Complex[] result = new Complex[N];
+                        result = FourierTransform(S1, S1.S, time);
+                        chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+                        double step1 = time / S1.S.Count;
+                        for (int i = 0; i < S1.S.Count; i++)
+                        {
+                            chart1.Series[0].Points.AddXY(i*step1, S1.S[i]);
+                            chart2.Series[0].Points.AddXY(S1.freq[i], result[i].Magnitude);
+                            chart2.ChartAreas[0].AxisX.Title = "Herz";
+                            chart2.ChartAreas[0].AxisY.Title = "Amplitude";
+                            chart1.ChartAreas[0].AxisX.Title = "Time (seconds)";
+                            chart1.ChartAreas[0].AxisY.Title = "Amplitude";
+                        }
+                        S1.freq.Clear();
+
+                        updS(S1);
+                    }
+                    else
+                    {
+                        Random rnd = new Random();
+                        double rand;
+                        List<double> rand1=new List<double>();
+                        
+                        for (int i = 0; i < System.Convert.ToInt32(RanSampCount.Text); i++)
+                        {
+                            rand = rnd.NextDouble() + rnd.Next(System.Convert.ToInt32(RanRange1.Text), System.Convert.ToInt32(RanRange2.Text));
+                            rand1.Add(rand);
+                        }
+                        S1.write(rand1);
+                        textBox4.Text = System.Convert.ToString(S1.S.Count);
+                        int N = S1.S.Count;
+                        Complex[] result = new Complex[N];
+                        result = FourierTransform(S1, S1.S, 1);
+                        chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+                        S1.b = System.Convert.ToDouble(Range1.Text);
+                        S1.be = System.Convert.ToDouble(Range2.Text);
+                        double step = (Math.Abs((System.Convert.ToDouble(Range2.Text) - System.Convert.ToDouble(Range1.Text)))) / System.Convert.ToDouble(resolution.Text);
+                        for (int i = 0; i < S1.S.Count; i++)
+                        {
+                            chart1.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step * i, S1.S[i]);
+                            chart2.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step * i, result[i].Magnitude);
+
+                        }
+                        S1.freq.Clear();
+
+                        updS(S1);
+                    }
+                }
+                    
             }
 
         }
         private void Plot2_Click(object sender, EventArgs e)
         {
-            try { chart2.Series[0].Points.Clear(); }
-            catch { }
-            if (tabControl1.SelectedTab == tabPage1)
-            {
-                chart2.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine;
-                for (int i = 0; i < S2.S.Count; i++)
-                {
-                    chart2.Series[0].Points.AddY(S2.S[i]);
-                }
-                updS(S2);
-            }
-            else
-            {
-                Generate(S2);
-                chart2.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-                S2.b = System.Convert.ToDouble(Range1.Text);
-                S2.be = System.Convert.ToDouble(Range2.Text);
-                double step = (Math.Abs((System.Convert.ToDouble(Range2.Text) - System.Convert.ToDouble(Range1.Text)))) / System.Convert.ToDouble(resolution.Text);
-                for (int i = 0; i < S2.S.Count; i++)
-                {
-                    chart2.Series[0].Points.AddXY(System.Convert.ToDouble(Range1.Text) + step*i, S2.S[i]);
-                }
-                updS(S2);
-            }
+           
         }
         private void textBox9_TextChanged(object sender, EventArgs e)
         {
@@ -474,55 +573,43 @@ namespace Wavelette_comparison
         private async void button2_Click(object sender, EventArgs e)
         {
             updS(S1);
-            updS(S2);
 
             progressBar1.Maximum = S1.reza - 1;
-            progressBar2.Maximum = S2.reza - 1;
 
             if (comboBox1.SelectedIndex == 0)
             {
-                Thread thread1 = new Thread(() => TransformSeq(S1, S1.a, S1.b, S1.S.Count()));
-                Thread thread2 = new Thread(() => TransformSeq(S2, S2.a, S2.b, S2.S.Count()));
+                Task thread1 = Task.Run(() => TransformSeq(S1, S1.a, S1.b, S1.S.Count()));
+                thread1.ContinueWith(task => button1.PerformClick(), TaskScheduler.FromCurrentSynchronizationContext());
+                
+                
 
-                thread1.Name = "name1";
-                thread2.Name = "name2";
-
-                thread1.Start();
-                thread2.Start();
             }
             else
             {
 
                 Thread thread1 = new Thread(() => TransformPar(S1, S1.a, S1.b, S1.S.Count()));
-                Thread thread2 = new Thread(() => TransformPar(S2, S2.a, S2.b, S2.S.Count()));
 
                 thread1.Name = "name1";
-                thread2.Name = "name2";
 
                 thread1.Start();
-                thread2.Start();
-
+                
             }
-            ExportMatrixToFile(S1.readM(),"output1.txt");
-            ExportMatrixToFile(S2.readM(), "output2.txt");
-         }
+        }
         private void button4_Click(object sender, EventArgs e)
         {
             try
             {
                 pictureBox1.Image.Dispose();
-                pictureBox2.Image.Dispose();
             }
             catch (Exception ex)
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
+            
             GenerateAndSaveImage(S1.readM(), "output_imageA.png");
-            GenerateAndSaveImage(S2.readM(), "output_imageB.png");
             pictureBox1.Image = Image.FromFile("output_imageA.png"); pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox2.Image = Image.FromFile("output_imageB.png"); pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-
-
+            draw_cor(false,"a");
+            pictureBox1.Image.Save("output_imageA.png");
 
         }
         private void button3_Click(object sender, EventArgs e)
@@ -569,8 +656,7 @@ namespace Wavelette_comparison
         {
 
             double max = matrix.Enumerate().Max();
-            double min = double.MaxValue; // Initialize min with the maximum possible value of double
-            // Iterate through each element in the matrix
+            double min = double.MaxValue;
             for (int i = 0; i < matrix.RowCount; i++)
             {
                 for (int j = 0; j < matrix.ColumnCount; j++)
@@ -582,15 +668,28 @@ namespace Wavelette_comparison
                     }
                 }
             }
-
-
-
             matrix.MapInplace(x => (x - min) / (max - min));
             return (matrix);
         }
+        
         static void GenerateAndSaveImage(Matrix<double> matrix, string filePath)
         {
-            matrix = NormalizeMatrix(matrix);
+
+            //matrix = NormalizeMatrix(matrix);    
+            double max = matrix.Enumerate().Max();
+            double min = double.MaxValue;
+            for (int i = 0; i < matrix.RowCount; i++)
+                {
+                 for (int j = 0; j < matrix.ColumnCount; j++)
+                    {
+                        // Check if the current element is not NaN and less than the current minimum
+                        if (!double.IsNaN(matrix[i, j]) && matrix[i, j] < min)
+                        {
+                            min = matrix[i, j]; // Update the minimum value
+                        }
+                    }
+                }            
+            var cmap1 = new SciColorMaps.Portable.ColorMap("jet",min,max);
             // Create a new Bitmap to draw the matrix
             Bitmap bitmap = new Bitmap((int)(matrix.ColumnCount), (int)(matrix.RowCount));
             // Map matrix values to colors and set pixels in the Bitmap
@@ -599,11 +698,13 @@ namespace Wavelette_comparison
                 for (int j = 0; j < matrix.ColumnCount; j++)
                 {
                     double value = matrix[i, j];
-                    Color color = MapValueToColor(value);
+                    //Color color = MapValueToColor(value);
+                    Color color = cmap1[value].ToMediaColor();
                     bitmap.SetPixel(j, i, color);
                 }
             }
-
+            
+            
             // Save the Bitmap as an image file
             try
             {
@@ -715,7 +816,7 @@ namespace Wavelette_comparison
             }
         }
         private void ApplyZoomAndPosition()
-        {
+        {/*
             // Apply zoom and position adjustments
             int newWidth = (int)(originalImage.Width * zoomFactor);
             int newHeight = (int)(originalImage.Height * zoomFactor);
@@ -725,15 +826,15 @@ namespace Wavelette_comparison
             int newX = (int)(mouseDownPoint.X - zoomFactor * mouseDownPoint.X);
             int newY = (int)(mouseDownPoint.Y - zoomFactor * mouseDownPoint.Y);
 
-            pictureBox1.Location = new Point(newX, newY);
+            pictureBox1.Location = new Point(newX, newY);*/
         }
 
         private void ResetZoomAndPosition()
-        {
+        {/*
             // Reset zoom factor and position
             zoomFactor = 1.0f;
             pictureBox1.Size = new Size(originalImage.Width, originalImage.Height);
-            pictureBox1.Location = new Point(0, 0);
+            pictureBox1.Location = new Point(0, 0);*/
         }
 
         #endregion
@@ -868,6 +969,122 @@ namespace Wavelette_comparison
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
+
         #endregion
+
+        private void chart1_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void textBox15_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox14_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox13_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        void draw_cor(bool a, string path)
+        {
+            if (a)
+            {
+                int w = pictureBox1.ClientSize.Width / 2;
+                int h = pictureBox1.ClientSize.Height / 2;
+                Refresh();
+                Bitmap bitmap1 = new Bitmap(w * 2, h * 2);
+                Bitmap bitmap = new Bitmap(w * 2, h * 2);
+                var rect = new Rectangle(0, 0, w * 2, h * 2);
+                pictureBox1.Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                pictureBox1.DrawToBitmap(bitmap1, rect);
+                Graphics e = Graphics.FromImage(bitmap1);
+                e.TranslateTransform(0, h * 2);
+                int StepX = System.Convert.ToInt32(w * 2 / 10);
+                int StepY = System.Convert.ToInt32(h * 2 / 10);
+                DrawXYAxis(new Point(0, 0), new Point(w * 2, 2 * h), e, StepX, StepY);
+                bitmap1.Save(path);
+                pictureBox1.Image = bitmap1;
+
+            }
+            else 
+            {
+                int w = pictureBox1.ClientSize.Width / 2;
+                int h = pictureBox1.ClientSize.Height / 2;
+                Refresh();
+                Bitmap bitmap1 = new Bitmap(w * 2, h * 2);
+                Bitmap bitmap = new Bitmap(w * 2, h * 2);
+                var rect = new Rectangle(0, 0, w * 2, h * 2);
+                pictureBox1.Image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                pictureBox1.DrawToBitmap(bitmap1, rect);
+                Graphics e = Graphics.FromImage(bitmap1);
+                e.TranslateTransform(0, h * 2);
+                int StepX = System.Convert.ToInt32(w * 2 / 10);
+                int StepY = System.Convert.ToInt32(h * 2 / 10);
+                DrawXYAxis(new Point(0, 0), new Point(w * 2, 2 * h), e, StepX, StepY);
+                bitmap1.Save("output_imageA2.png");
+                pictureBox1.Image = bitmap1;
+                
+            }
+
+
+        }
+        private void DrawXYAxis(Point start, Point end, Graphics g, int StepX, int StepY)
+        {
+            int Step = StepX;
+            double time = System.Convert.ToDouble(textBox15.Text)/10;
+            double scale = System.Convert.ToDouble(textBox9.Text)/10;
+
+            int j = 1;
+            for (int i = Step; i < end.X; i += Step)
+            {
+                g.DrawLine(Pens.Black, i, -5, i, 5);
+                DrawText(new Point(i,-30), (j*time ).ToString(), g, false);
+                j++;
+            }
+            j = 1;
+            for (int i = StepY; i < end.Y; i += StepY)
+            {
+                g.DrawLine(Pens.Black, -5, -i, 5, -i);
+                DrawText(new Point(30, -i), ((j * scale).ToString("0.###E+0", CultureInfo.InvariantCulture)), g, false);
+                j++;
+            }
+            DrawText(new Point(50,-end.Y/2-10), "a", g, false);
+            DrawText(new Point(end.X/2,-50), "Time(seconds)", g, false);
+
+            g.DrawLine(Pens.Black, start, end);
+            g.DrawString("X", new Font(Font.FontFamily, 10, FontStyle.Bold), Brushes.Black, new Point(end.X - 15, end.Y));
+
+        }
+
+        private void DrawText(Point point, string text, Graphics g, bool isYAxis)
+        {
+            var f = new Font(Font.FontFamily, 12);
+            var size = g.MeasureString(text, f);
+            var pt = isYAxis
+                ? new PointF(point.X + 1, point.Y - size.Height / 2)
+                : new PointF(point.X - size.Width / 2, point.Y + 1);
+            var rect = new RectangleF(pt, size);
+            g.DrawString(text, f, Brushes.Black, rect);
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+           
+            
+            draw_cor(false,"p");
+            
+        }
+
+        private void textBox2_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }
