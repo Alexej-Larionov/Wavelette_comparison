@@ -134,3 +134,15 @@ C:\Users\posei\Documents\GitHub\Wavelette_comparison\Wavelette_comparison\obj\De
 C:\Users\posei\Documents\GitHub\Wavelette_comparison\Wavelette_comparison\obj\Debug\Wavelette_comparison.csproj.CopyComplete
 C:\Users\posei\Documents\GitHub\Wavelette_comparison\Wavelette_comparison\obj\Debug\Wavelette_comparison.exe
 C:\Users\posei\Documents\GitHub\Wavelette_comparison\Wavelette_comparison\obj\Debug\Wavelette_comparison.pdb
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\Accord.dll.config
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\Accord.dll
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\Accord.Math.Core.dll
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\Accord.Math.dll
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\System.Drawing.Common.dll
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\UMapx.dll
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\Accord.xml
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\Accord.Math.xml
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\Accord.Math.Core.xml
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\System.Drawing.Common.pdb
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\System.Drawing.Common.xml
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\UMapx.xml

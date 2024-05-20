@@ -1,24 +1,19 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.IntegralTransforms;
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Windows.Forms;
-using OfficeOpenXml;
+﻿using MathNet.Numerics.IntegralTransforms;
+using MathNet.Numerics.LinearAlgebra;
 using NAudio.Wave;
+using OfficeOpenXml;
+using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
-using System.Numerics;
+using System.Drawing;
 using System.Globalization;
-using SciColorMaps.Portable;
-
+using System.IO;
+using System.Linq;
+using System.Numerics;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Wavelette_comparison
 {
@@ -60,20 +55,20 @@ namespace Wavelette_comparison
         }
         private Complex[] FourierTransform(Signal f1, Vector<double> signal, double duration)
         {
-            
+
             // Преобразуем сигнал в комплексный массив
             Complex[] complexSignal = new Complex[signal.Count];
-            float[] signalR = new float[signal.Count+2];
-            double[] freq = new double[signal.Count*2];
+            float[] signalR = new float[signal.Count + 2];
+            double[] freq = new double[signal.Count * 2];
             for (int i = 0; i < signal.Count; i++)
             {
                 complexSignal[i] = new Complex(signal[i], 0);
-                signalR[i] =Convert.ToSingle(f1.S[i]);
+                signalR[i] = Convert.ToSingle(f1.S[i]);
             }
 
             // Выполняем преобразование Фурье
             Fourier.Forward(complexSignal, FourierOptions.Matlab);
-            Fourier.ForwardReal(signalR, signalR.Count()-2, FourierOptions.Matlab);
+            Fourier.ForwardReal(signalR, signalR.Count() - 2, FourierOptions.Matlab);
             // Рассчитываем частоты для оси X графика
             double[] frequencyAxis = new double[signal.Count];
             double sampleRate = signal.Count / duration;
@@ -88,11 +83,11 @@ namespace Wavelette_comparison
             {
                 amplitudeAxis[i] = complexSignal[i].Magnitude;
             }
-            freq=Fourier.FrequencyScale(signal.Count()*2,sampleRate*2);
-                     
+            freq = Fourier.FrequencyScale(signal.Count() * 2, sampleRate);
+
             for (int i = 0; i < signal.Count; i++)
             {
-                
+
                 f1.freq.Add(freq[i]);
                 f1.ampl.Add(amplitudeAxis[i]);
 
@@ -100,7 +95,7 @@ namespace Wavelette_comparison
             for (int i = 0; i < signal.Count; i++)
             {
                 complexSignal[i] = new Complex(signalR[i], 0);
-                
+
             }
             return (complexSignal);
         }
@@ -114,12 +109,12 @@ namespace Wavelette_comparison
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 int i = 0;
                 // Check if the file is a .txt file
-                    while (i < files.Length)
-                    {
-                        richTextBox1.Text = files[i];
-                        i++;
-                    }
-                    ProcessMP3(files[0], S1);                
+                while (i < files.Length)
+                {
+                    richTextBox1.Text = files[i];
+                    i++;
+                }
+                ProcessMP3(files[0], S1);
             }
         }
         private void textBox1_DragEnter(object sender, DragEventArgs e)
@@ -129,7 +124,7 @@ namespace Wavelette_comparison
         }
         private void textBox2_DragDrop(object sender, DragEventArgs e)
         {
-           
+
 
         }
         private void textBox2_DragEnter(object sender, DragEventArgs e)
@@ -208,7 +203,7 @@ namespace Wavelette_comparison
                     richTextBox2.Text = files[i];
                     i++;
                 }
-                ReadCSV(files[0],S1);
+                ReadCSV(files[0], S1);
             }
         }
         private void ReadCSV(string folderPath, Signal S)
@@ -216,7 +211,7 @@ namespace Wavelette_comparison
             var count = new DirectoryInfo(folderPath).GetFiles().Length.ToString();
             int Text = System.Convert.ToInt32(count);
             // Предполагаем, что в папке только один CSV файл.
-            if (Text!=1) 
+            if (Text != 1)
             {
                 Signal[] Sv = new Signal[Text];
                 for (int i = 0; i < Text; i++)
@@ -238,18 +233,19 @@ namespace Wavelette_comparison
                     Sv[i].write(secondColumnValues);
                     Sv[i].be = secondColumnValues.Count();
                     Sv[i].b = 0;
-                    
+
                 }
-                for (int i=0; i <Text;i++)
+                for (int i = 0; i < Text; i++)
                 {
                     updS(Sv[i]);
                     TransformSeq(Sv[i], Sv[i].a, Sv[i].b, Sv[i].S.Count());
                     draw_cor(true, $"C:/Users/posei/source/repos/Wavelette_comparison/Wavelette_comparison/bin/Debug/Array/output_imageA{i}.png");
                     Console.WriteLine($"{i}");
+                    Sv[i].dispose();
                 }
                 //"C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\Array"
             }
-            else 
+            else
             {
                 var filePath = Directory.GetFiles(folderPath, "*.csv")[0];
                 var lines = File.ReadAllLines(filePath);
@@ -268,7 +264,7 @@ namespace Wavelette_comparison
                 S.be = secondColumnValues.Count();
                 S.b = 0;
             }
-            
+
         }
         #endregion
         #region Wavelette functionsParallel
@@ -307,7 +303,7 @@ namespace Wavelette_comparison
             double t = 0;
             Parallel.For(0, System.Convert.ToInt32(S.S.Count), i =>
             {
-                t =S.b+((S.be-S.b)/ (S.S.Count)) * System.Convert.ToDouble(i);
+                t = S.b + ((S.be - S.b) / (S.S.Count)) * System.Convert.ToDouble(i);
                 T = (t - b) / a;
                 values[System.Convert.ToInt32(i)] = Math.Abs(Math.Pow(a, (-0.5f))) * (1 - Math.Pow(T, 2)) * Math.Exp((-1 * Math.Pow(T, 2)) / 2);
             });
@@ -332,10 +328,10 @@ namespace Wavelette_comparison
             for (int i = 0; i < S.reza; i++)
             {
 
-                A =A+i * Astep;
+                A = A + i * Astep;
                 for (int j = 0; j < S.rezb; j++)
                 {
-                    B =B+ j * Bstep;
+                    B = B + j * Bstep;
                     value = S.S.DotProduct(MhatPar(A, B, S));
                     matrix[i, j] = value;
 
@@ -351,31 +347,32 @@ namespace Wavelette_comparison
 
             S.write(matrix);
 
-           
-                stopwatch1.Stop();
-            
-            
+
+            stopwatch1.Stop();
+
+
 
         }
-        
+
         #endregion
         #region WaveFuncSequential
+
         Vector<double> MhatSeq(double a, double b, double length, Signal S)
         {
 
             Vector<double> values = Vector<double>.Build.Dense(System.Convert.ToInt32(length));
-            double T ;
-            double t ;
-            double tstep = (S.be-S.b)/length;
+            double T;
+            double t;
+            double tstep = (S.be - S.b) / length;
             for (int i = 0; i < System.Convert.ToInt32(length); i++)
             {
-                t =S.b+System.Convert.ToDouble(i)*tstep;
+                t = S.b + System.Convert.ToDouble(i) * tstep;
                 T = (t - b) / a;
                 values[System.Convert.ToInt32(i)] = (1 - Math.Pow(T, 2)) * Math.Exp(-1 * Math.Pow(T, 2) / 2);
             }
-            
-            return (values);
 
+            return (values);
+            //Dispose();
         }
         void TransformSeq(Signal S, double a, double b, double length)
         {
@@ -393,11 +390,11 @@ namespace Wavelette_comparison
             for (int i = 0; i < S.reza; i++)
             {
 
-                A =S.a+ i * Astep;
+                A = S.a + i * Astep;
                 for (int j = 0; j < S.rezb; j++)
                 {
-                    B =S.b+j * Bstep;
-                    value = S.S.DotProduct(MhatSeq(A, B, (S.S.Count),S));
+                    B = S.b + j * Bstep;
+                    value = S.S.DotProduct(MhatSeq(A, B, (S.S.Count), S));
                     matrix[i, j] = value;
 
                 }
@@ -418,12 +415,14 @@ namespace Wavelette_comparison
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
-            
+
             GenerateAndSaveImage(S.readM(), "output_imageA.png");
+            //Dispose();
             pictureBox1.Image = Image.FromFile("output_imageA.png"); pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             ExportMatrixToFile(S.readM(), "output1.txt");
-            stopwatch1.Stop();        
-            stopwatch1.Reset();           
+            stopwatch1.Stop();
+            stopwatch1.Reset();
+
         }
         #endregion
         #region PLOT
@@ -432,7 +431,7 @@ namespace Wavelette_comparison
             // Set up the Chart control
             if (S1.flag == 1) { chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline; }
             else { chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine; }
-            
+
             chart1.Series[0].Points.Clear();
 
             // Add data points to the series
@@ -456,21 +455,21 @@ namespace Wavelette_comparison
             {
                 int N = S1.S.Count;
                 Complex[] result = new Complex[N];
-                result = FourierTransform(S1,S1.S,time);
+                result = FourierTransform(S1, S1.S, time);
                 chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StepLine;
                 for (int i = 0; i < S1.S.Count; i++)
                 {
-                    chart1.Series[0].Points.AddXY(1/S1.S.Count*i,S1.S[i]);
-                    chart2.Series[0].Points.AddXY( S1.freq[i],result[i].Magnitude);
+                    chart1.Series[0].Points.AddXY(1 / S1.S.Count * i, S1.S[i]);
+                    chart2.Series[0].Points.AddXY(S1.freq[i], result[i].Magnitude);
 
                 }
                 S1.freq.Clear();
 
                 updS(S1);
             }
-            else 
+            else
             {
-                if (tabControl1.SelectedTab == tabPage2) 
+                if (tabControl1.SelectedTab == tabPage2)
                 {
                     Generate(S1);
                     int N = S1.S.Count;
@@ -482,7 +481,7 @@ namespace Wavelette_comparison
                     double step1 = time / S1.S.Count;
                     for (int i = 0; i < S1.S.Count; i++)
                     {
-                        chart1.Series[0].Points.AddXY(i*step1, S1.S[i]);
+                        chart1.Series[0].Points.AddXY(i * step1, S1.S[i]);
                         chart2.Series[0].Points.AddXY(S1.freq[i], result[i].Magnitude);
                         chart2.ChartAreas[0].AxisX.Title = "Herz";
                         chart2.ChartAreas[0].AxisY.Title = "Amplitude";
@@ -493,7 +492,7 @@ namespace Wavelette_comparison
                     S1.freq.Clear();
                     updS(S1);
                 }
-                else 
+                else
                 {
                     if (tabControl1.SelectedTab == tabPage3)
                     {
@@ -504,7 +503,7 @@ namespace Wavelette_comparison
                         double step1 = time / S1.S.Count;
                         for (int i = 0; i < S1.S.Count; i++)
                         {
-                            chart1.Series[0].Points.AddXY(i*step1, S1.S[i]);
+                            chart1.Series[0].Points.AddXY(i * step1, S1.S[i]);
                             chart2.Series[0].Points.AddXY(S1.freq[i], result[i].Magnitude);
                             chart2.ChartAreas[0].AxisX.Title = "Herz";
                             chart2.ChartAreas[0].AxisY.Title = "Amplitude";
@@ -519,8 +518,8 @@ namespace Wavelette_comparison
                     {
                         Random rnd = new Random();
                         double rand;
-                        List<double> rand1=new List<double>();
-                        
+                        List<double> rand1 = new List<double>();
+
                         for (int i = 0; i < System.Convert.ToInt32(RanSampCount.Text); i++)
                         {
                             rand = rnd.NextDouble() + rnd.Next(System.Convert.ToInt32(RanRange1.Text), System.Convert.ToInt32(RanRange2.Text));
@@ -546,13 +545,13 @@ namespace Wavelette_comparison
                         updS(S1);
                     }
                 }
-                    
+
             }
 
         }
         private void Plot2_Click(object sender, EventArgs e)
         {
-           
+
         }
         private void textBox9_TextChanged(object sender, EventArgs e)
         {
@@ -561,12 +560,12 @@ namespace Wavelette_comparison
         private void updS(Signal S)
         {
             S.reza = System.Convert.ToInt32(textBox3.Text);
-           // S2.reza = System.Convert.ToInt32(textBox3.Text);
+            // S2.reza = System.Convert.ToInt32(textBox3.Text);
             S.rezb = System.Convert.ToInt32(textBox4.Text);
-           // S2.rezb = System.Convert.ToInt32(textBox4.Text);
+            // S2.rezb = System.Convert.ToInt32(textBox4.Text);
             S.a = System.Convert.ToDouble(textBox10.Text);
             S.ae = System.Convert.ToDouble(textBox9.Text);
-           // S2.a = System.Convert.ToDouble(textBox10.Text);
+            // S2.a = System.Convert.ToDouble(textBox10.Text);
             //S2.ae = System.Convert.ToDouble(textBox9.Text);
         }
 
@@ -580,8 +579,8 @@ namespace Wavelette_comparison
             {
                 Task thread1 = Task.Run(() => TransformSeq(S1, S1.a, S1.b, S1.S.Count()));
                 thread1.ContinueWith(task => button1.PerformClick(), TaskScheduler.FromCurrentSynchronizationContext());
-                
-                
+
+
 
             }
             else
@@ -592,7 +591,7 @@ namespace Wavelette_comparison
                 thread1.Name = "name1";
 
                 thread1.Start();
-                
+
             }
         }
         private void button4_Click(object sender, EventArgs e)
@@ -605,10 +604,10 @@ namespace Wavelette_comparison
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
-            
+
             GenerateAndSaveImage(S1.readM(), "output_imageA.png");
             pictureBox1.Image = Image.FromFile("output_imageA.png"); pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            draw_cor(false,"a");
+            draw_cor(false, "a");
             pictureBox1.Image.Save("output_imageA.png");
 
         }
@@ -654,7 +653,7 @@ namespace Wavelette_comparison
         #region ColorMapping
         static Matrix<double> NormalizeMatrix(Matrix<double> matrix)
         {
-
+            /*
             double max = matrix.Enumerate().Max();
             double min = double.MaxValue;
             for (int i = 0; i < matrix.RowCount; i++)
@@ -668,28 +667,65 @@ namespace Wavelette_comparison
                     }
                 }
             }
-            matrix.MapInplace(x => (x - min) / (max - min));
-            return (matrix);
-        }
-        
-        static void GenerateAndSaveImage(Matrix<double> matrix, string filePath)
-        {
-
-            //matrix = NormalizeMatrix(matrix);    
+            matrix.MapInplace(x => (x - min) / (max - min));*/
+            int rows = matrix.RowCount;
+            int cols = matrix.ColumnCount;
             double max = matrix.Enumerate().Max();
             double min = double.MaxValue;
             for (int i = 0; i < matrix.RowCount; i++)
+            {
+                for (int j = 0; j < matrix.ColumnCount; j++)
                 {
-                 for (int j = 0; j < matrix.ColumnCount; j++)
+                    // Check if the current element is not NaN and less than the current minimum
+                    if (!double.IsNaN(matrix[i, j]) && matrix[i, j] < min)
                     {
-                        // Check if the current element is not NaN and less than the current minimum
-                        if (!double.IsNaN(matrix[i, j]) && matrix[i, j] < min)
-                        {
-                            min = matrix[i, j]; // Update the minimum value
-                        }
+                        min = matrix[i, j]; // Update the minimum value
                     }
-                }            
-            var cmap1 = new SciColorMaps.Portable.ColorMap("jet",min,max);
+                }
+            }
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    if (double.IsPositiveInfinity(matrix[i, j])) 
+                    {
+                        matrix[i, j] = max;
+                    }
+                    if (double.IsNegativeInfinity(matrix[i, j]))
+                    {
+                        matrix[i, j] = min;
+
+                    }
+                    if (double.IsNaN(matrix[i, j])) 
+                    {
+                        matrix[i, j] = 0;
+                    }
+                    matrix[i, j] = Math.Abs(matrix[i,j]);
+                    matrix[i, j] += 10e-8;
+                    matrix[i, j] = Math.Log10(matrix[i, j]); // Using log base 10
+                }
+            }
+            return (matrix);
+        }
+
+        static void GenerateAndSaveImage(Matrix<double> matrix, string filePath)
+        {
+
+            matrix = NormalizeMatrix(matrix);    
+            double max = matrix.Enumerate().Max();
+            double min = double.MaxValue;
+            for (int i = 0; i < matrix.RowCount; i++)
+            {
+                for (int j = 0; j < matrix.ColumnCount; j++)
+                {
+                    // Check if the current element is not NaN and less than the current minimum
+                    if (!double.IsNaN(matrix[i, j]) && matrix[i, j] < min)
+                    {
+                        min = matrix[i, j]; // Update the minimum value
+                    }
+                }
+            }
+            var cmap1 = new SciColorMaps.Portable.ColorMap("jet", min, max);
             // Create a new Bitmap to draw the matrix
             Bitmap bitmap = new Bitmap((int)(matrix.ColumnCount), (int)(matrix.RowCount));
             // Map matrix values to colors and set pixels in the Bitmap
@@ -703,8 +739,8 @@ namespace Wavelette_comparison
                     bitmap.SetPixel(j, i, color);
                 }
             }
-            
-            
+
+
             // Save the Bitmap as an image file
             try
             {
@@ -854,7 +890,7 @@ namespace Wavelette_comparison
                 parser.LocalVariables.Clear();
             }
             export.S = Value;
-                                
+
         }
         #endregion
         #region MISC
@@ -941,24 +977,24 @@ namespace Wavelette_comparison
                     {
                         for (int j = 0; j < columns; j++)
                         {
-                            if (!double.IsNaN(matrix[i, j])) 
+                            if (!double.IsNaN(matrix[i, j]))
                             {
                                 writer.Write(matrix[i, j]);
                                 //if (i != rows - 1)
                                 //    writer.Write("|");
                             }
-                            else 
+                            else
                             {
                                 writer.Write("0,0");
                                 //if (i != rows - 1)
-                                  //  writer.Write("|");
+                                //  writer.Write("|");
 
                             }
-                            if (i * j != (rows-1) * (columns-1)) { writer.Write("|"); }
+                            if (i * j != (rows - 1) * (columns - 1)) { writer.Write("|"); }
 
                         }
 
-                       // writer.WriteLine(); // Move to the next line for the next row
+                        // writer.WriteLine(); // Move to the next line for the next row
                     }
                 }
 
@@ -974,7 +1010,7 @@ namespace Wavelette_comparison
 
         private void chart1_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void textBox15_TextChanged(object sender, EventArgs e)
@@ -1011,9 +1047,8 @@ namespace Wavelette_comparison
                 DrawXYAxis(new Point(0, 0), new Point(w * 2, 2 * h), e, StepX, StepY);
                 bitmap1.Save(path);
                 pictureBox1.Image = bitmap1;
-
             }
-            else 
+            else
             {
                 int w = pictureBox1.ClientSize.Width / 2;
                 int h = pictureBox1.ClientSize.Height / 2;
@@ -1030,7 +1065,7 @@ namespace Wavelette_comparison
                 DrawXYAxis(new Point(0, 0), new Point(w * 2, 2 * h), e, StepX, StepY);
                 bitmap1.Save("output_imageA2.png");
                 pictureBox1.Image = bitmap1;
-                
+
             }
 
 
@@ -1038,14 +1073,14 @@ namespace Wavelette_comparison
         private void DrawXYAxis(Point start, Point end, Graphics g, int StepX, int StepY)
         {
             int Step = StepX;
-            double time = System.Convert.ToDouble(textBox15.Text)/10;
-            double scale = System.Convert.ToDouble(textBox9.Text)/10;
+            double time = System.Convert.ToDouble(textBox15.Text) / 10;
+            double scale = System.Convert.ToDouble(textBox9.Text) / 10;
 
             int j = 1;
             for (int i = Step; i < end.X; i += Step)
             {
                 g.DrawLine(Pens.Black, i, -5, i, 5);
-                DrawText(new Point(i,-30), (j*time ).ToString(), g, false);
+                DrawText(new Point(i, -30), (j * time).ToString(), g, false);
                 j++;
             }
             j = 1;
@@ -1055,8 +1090,8 @@ namespace Wavelette_comparison
                 DrawText(new Point(30, -i), ((j * scale).ToString("0.###E+0", CultureInfo.InvariantCulture)), g, false);
                 j++;
             }
-            DrawText(new Point(50,-end.Y/2-10), "a", g, false);
-            DrawText(new Point(end.X/2,-50), "Time(seconds)", g, false);
+            DrawText(new Point(50, -end.Y / 2 - 10), "a", g, false);
+            DrawText(new Point(end.X / 2, -50), "Time(seconds)", g, false);
 
             g.DrawLine(Pens.Black, start, end);
             g.DrawString("X", new Font(Font.FontFamily, 10, FontStyle.Bold), Brushes.Black, new Point(end.X - 15, end.Y));
@@ -1076,10 +1111,10 @@ namespace Wavelette_comparison
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-           
-            
-            draw_cor(false,"p");
-            
+
+
+            draw_cor(false, "p");
+
         }
 
         private void textBox2_TextChanged_1(object sender, EventArgs e)
