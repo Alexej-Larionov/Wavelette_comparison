@@ -17,14 +17,14 @@ using System.Windows.Forms;
 
 namespace Wavelette_comparison
 {
-    public partial class Form1 : Form
+    public partial class Test : Form
     {
         Signal S1 = new Signal();
         //List<Signal> Sv = new List<Signal>();
         private Point mouseDownPoint;
         private bool isDragging = false;
         private float zoomFactor = 1.0f;
-        public Form1()
+        public Test()
         {
             InitializeComponent();
         }
@@ -233,15 +233,12 @@ namespace Wavelette_comparison
                     Sv[i].write(secondColumnValues);
                     Sv[i].be = secondColumnValues.Count();
                     Sv[i].b = 0;
-
+                    secondColumnValues = null;
                 }
+                //prepBitmap(Text);
                 for (int i = 0; i < Text; i++)
                 {
-                    updS(Sv[i]);
-                    TransformSeq(Sv[i], Sv[i].a, Sv[i].b, Sv[i].S.Count());
-                    draw_cor(true, $"C:/Users/posei/source/repos/Wavelette_comparison/Wavelette_comparison/bin/Debug/Array/output_imageA{i}.png");
-                    Console.WriteLine($"{i}");
-                    Sv[i].dispose();
+                    Array(Sv[i], i);
                 }
                 //"C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\Array"
             }
@@ -265,6 +262,26 @@ namespace Wavelette_comparison
                 S.b = 0;
             }
 
+
+        }
+      /*  private void prepBitmap(int i)
+        {
+            Bitmap[] bit = new Bitmap[i];
+            for (int j = 0; j < i; j++)
+            {
+                bit[j].MakeTransparent;
+                bit[j].Save($"C:/Users/posei/source/repos/Wavelette_comparison/Wavelette_comparison/bin/Debug/Array/output_imageA{i}.png");
+            }
+        }*/
+        private void Array(Signal Sv, int i)
+        {
+
+            updS(Sv);
+            TransformSeq(Sv, Sv.a, Sv.b, Sv.S.Count());
+            draw_cor(true, $"C:/Users/posei/source/repos/Wavelette_comparison/Wavelette_comparison/bin/Debug/Array/output_imageA{i}.png");
+            Console.WriteLine($"{i}");
+            Sv = null;
+            pictureBox1.Image = null;
         }
         #endregion
         #region Wavelette functionsParallel
@@ -372,7 +389,6 @@ namespace Wavelette_comparison
             }
 
             return (values);
-            //Dispose();
         }
         void TransformSeq(Signal S, double a, double b, double length)
         {
@@ -419,10 +435,10 @@ namespace Wavelette_comparison
             GenerateAndSaveImage(S.readM(), "output_imageA.png");
             //Dispose();
             pictureBox1.Image = Image.FromFile("output_imageA.png"); pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            ExportMatrixToFile(S.readM(), "output1.txt");
+            //ExportMatrixToFile(S.readM(), "output1.txt");
             stopwatch1.Stop();
-            stopwatch1.Reset();
-
+            matrix = null;
+            stopwatch1 = null;
         }
         #endregion
         #region PLOT
@@ -687,7 +703,7 @@ namespace Wavelette_comparison
             {
                 for (int j = 0; j < cols; j++)
                 {
-                    if (double.IsPositiveInfinity(matrix[i, j])) 
+                    if (double.IsPositiveInfinity(matrix[i, j]))
                     {
                         matrix[i, j] = max;
                     }
@@ -696,22 +712,23 @@ namespace Wavelette_comparison
                         matrix[i, j] = min;
 
                     }
-                    if (double.IsNaN(matrix[i, j])) 
+                    if (double.IsNaN(matrix[i, j]))
                     {
                         matrix[i, j] = 0;
                     }
-                    matrix[i, j] = Math.Abs(matrix[i,j]);
+                    matrix[i, j] = Math.Abs(matrix[i, j]);
                     matrix[i, j] += 10e-8;
                     matrix[i, j] = Math.Log10(matrix[i, j]); // Using log base 10
                 }
             }
             return (matrix);
+            matrix = null;
         }
 
         static void GenerateAndSaveImage(Matrix<double> matrix, string filePath)
         {
 
-            matrix = NormalizeMatrix(matrix);    
+            //matrix = NormalizeMatrix(matrix);
             double max = matrix.Enumerate().Max();
             double min = double.MaxValue;
             for (int i = 0; i < matrix.RowCount; i++)
@@ -750,7 +767,8 @@ namespace Wavelette_comparison
             {
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
-
+            bitmap = null;
+            matrix = null;
         }
 
         static Color MapValueToColor(double value)
@@ -1047,6 +1065,8 @@ namespace Wavelette_comparison
                 DrawXYAxis(new Point(0, 0), new Point(w * 2, 2 * h), e, StepX, StepY);
                 bitmap1.Save(path);
                 pictureBox1.Image = bitmap1;
+                bitmap = null;
+                bitmap1 = null;
             }
             else
             {
@@ -1067,7 +1087,6 @@ namespace Wavelette_comparison
                 pictureBox1.Image = bitmap1;
 
             }
-
 
         }
         private void DrawXYAxis(Point start, Point end, Graphics g, int StepX, int StepY)

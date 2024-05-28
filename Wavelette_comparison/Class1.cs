@@ -30,10 +30,10 @@ namespace Wavelette_comparison
 
         public void dispose()
         {
-            this.S.Clear();
-            this.m.Clear();
-            this.freq.Clear();
-            this.ampl.Clear();
+            this.S=null;
+            this.m=null;
+            this.freq=null;
+            this.ampl=null;
         }
         public void write(List<double> A)
         {

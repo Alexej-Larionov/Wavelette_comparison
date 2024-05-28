@@ -35,7 +35,6 @@ C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\
 C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\NAudio.WinMM.xml
 C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\System.Security.AccessControl.xml
 C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\System.Security.Principal.Windows.xml
-C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\obj\Debug\Wavelette_comparison.Form1.resources
 C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\EPPlus.dll
 C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\OfficeOpenXml.Extension.AspNetCore.dll
 C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\EPPlus.xml
@@ -146,3 +145,10 @@ C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\
 C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\System.Drawing.Common.pdb
 C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\System.Drawing.Common.xml
 C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\UMapx.xml
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\ksh-DE\Wavelette_comparison.resources.dll
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Debug\ru\Wavelette_comparison.resources.dll
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\obj\Debug\ksh-DE\Wavelette_comparison.resources.dll
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\obj\Debug\ru\Wavelette_comparison.resources.dll
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\obj\Debug\Wavelette_comparison.Test.resources
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\obj\Debug\Wavelette_comparison.Test.ksh-DE.resources
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\obj\Debug\Wavelette_comparison.Test.ru.resources
