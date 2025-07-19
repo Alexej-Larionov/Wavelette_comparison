@@ -58,3 +58,11 @@ C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\obj\Releas
 C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\obj\Release\Wavelette_comparison.csproj.CopyComplete
 C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\obj\Release\Wavelette_comparison.exe
 C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\obj\Release\Wavelette_comparison.pdb
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Release\MathLinq.dll
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Release\Mathos.dll
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Release\MathParser.dll
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Release\SciColorMaps.Portable.dll
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Release\Universal.Common.dll
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Release\Universal.Common.Mathematics.dll
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Release\Universal.Common.xml
+C:\Users\posei\source\repos\Wavelette_comparison\Wavelette_comparison\bin\Release\Universal.Common.Mathematics.xml
