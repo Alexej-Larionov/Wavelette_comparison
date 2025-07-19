@@ -43,10 +43,7 @@ Wavelets are localized in both time and frequency, allowing you to detect and tr
 
 | Signal              | Fourier Spectrum    | Wavelet Spectrogram   |
 |---------------------|--------------------|-----------------------|
-| <img width="871" height="125" alt="image" src="https://github.com/user-attachments/assets/8f4a5a8d-0103-4c42-a399-e4e93c2e0ad6" />
- |<img width="879" height="136" alt="image" src="https://github.com/user-attachments/assets/a424c217-4f4a-4754-a516-ff93ae9d698a" />
-   | <img width="826" height="367" alt="image" src="https://github.com/user-attachments/assets/5a7e00bf-f591-48d0-92ea-3111eba1b02a" />
-      |
+| <img width="871" height="125" alt="image" src="https://github.com/user-attachments/assets/8f4a5a8d-0103-4c42-a399-e4e93c2e0ad6" />|<img width="879" height="136" alt="image" src="https://github.com/user-attachments/assets/a424c217-4f4a-4754-a516-ff93ae9d698a" />| <img width="826" height="367" alt="image" src="https://github.com/user-attachments/assets/5a7e00bf-f591-48d0-92ea-3111eba1b02a" />|
 
 
 ## Installation
