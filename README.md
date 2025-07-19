@@ -43,9 +43,9 @@ Wavelets are localized in both time and frequency, allowing you to detect and tr
 
 | Signal              | Fourier Spectrum    | Wavelet Spectrogram   |
 |---------------------|--------------------|-----------------------|
-| ![](img/signal.png) | ![](img/fft.png)   | ![](img/cwt.png)      |
+| <img width="871" height="125" alt="image" src="https://github.com/user-attachments/assets/8f4a5a8d-0103-4c42-a399-e4e93c2e0ad6" />
+ | ![](img/fft.png)   | ![](img/cwt.png)      |
 
-*(Replace with your actual images)*
 
 ## Installation
 
@@ -53,7 +53,6 @@ Wavelets are localized in both time and frequency, allowing you to detect and tr
 - Windows OS
 - .NET Framework 4.7+  
 - Visual Studio 2019+ (or compatible)
-- [Optional] Example datasets (`/examples` folder)
 
 **Steps:**
 
