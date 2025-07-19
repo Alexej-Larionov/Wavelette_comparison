@@ -39,6 +39,9 @@ Wavelets are localized in both time and frequency, allowing you to detect and tr
 3. **Visualize** signal, Fourier spectrum, and wavelet spectrogram
 4. **Analyze** the time-frequency characteristics, find local anomalies, and compare stationary vs non-stationary processes
 
+#### Program Main Window
+<img width="2559" height="1390" alt="image" src="https://github.com/user-attachments/assets/82986350-28b9-4968-ae3a-05b9369e925c" />
+
 #### Sample Output
 
 | Signal              | Fourier Spectrum    | Wavelet Spectrogram   |
