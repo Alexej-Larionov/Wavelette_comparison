@@ -59,4 +59,4 @@ Wavelets are localized in both time and frequency, allowing you to detect and tr
 **Steps:**
 
 ```sh
-git clone https://github.com/your-username/your-repo.git
+git clone https://github.com/Alexej-Larionov/Wavelette_comparison.git
